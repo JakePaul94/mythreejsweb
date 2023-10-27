@@ -4,10 +4,33 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Adrian | JavaScript Mastery Portfolio</title>
+    <title>Trình.Dc | Developer and Designer</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+    
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyDjpGtJHU7mEJqRi17FjDJdc0Wh0TnOoKo",
+        authDomain: "mywebtrinhdc.firebaseapp.com",
+        projectId: "mywebtrinhdc",
+        storageBucket: "mywebtrinhdc.appspot.com",
+        messagingSenderId: "1046873168579",
+        appId: "1:1046873168579:web:64798bbd7269799483a076",
+        measurementId: "G-RYLSHHJYLY"
+      };
+    
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
   </body>
 </html>

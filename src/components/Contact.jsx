@@ -1,9 +1,10 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
+import { useIsVisible } from "../hooks/useOnVisible";
 
 import { styles } from "../styles";
-import { EarthCanvas } from "./canvas";
+
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
 
@@ -14,7 +15,8 @@ const Contact = () => {
     email: "",
     message: "",
   });
-
+  const ref = useRef()
+  const isVisible = useIsVisible(ref)
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -39,7 +41,7 @@ const Contact = () => {
           from_name: form.name,
           to_name: "JavaScript Mastery",
           from_email: form.email,
-          to_email: "sujata@jsmastery.pro",
+          to_email: "trinhbk501@gmail.com",
           message: form.message,
         },
         import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
@@ -126,8 +128,11 @@ const Contact = () => {
       <motion.div
         variants={slideIn("right", "tween", 0.2, 1)}
         className='xl:flex-1 xl:h-auto md:h-[550px] h-[350px]'
+        ref={ref}
+
       >
-        <EarthCanvas />
+        {isVisible?<div  />:null}
+        
       </motion.div>
     </div>
   );

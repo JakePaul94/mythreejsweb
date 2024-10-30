@@ -1,27 +1,40 @@
-import { BrowserRouter } from "react-router-dom";
+import { CanvasLoader, GlobalCanvas, Navbar } from "./components";
+import { useScrollAuto } from "./hooks/useScrollTracker";
+import { useAtom } from "jotai";
+import { isLoadedAtom, typeOSAtom } from "./atoms/globalAtoms";
+import { useEffect, useState } from "react";
+import Contents from "./Contents";
+import { useFixHeight } from "./hooks/useFixHeight";
+import MobileDetect from "mobile-detect";
+import AudioPlayer from "./components/Audio";
+function DisableScrollRestoration() {
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
 
-import { About, Contact, Experience, Feedbacks, Hero, Navbar, Tech, Works } from "./components";
-
-const App = () => {
-  
-  return (
-    <BrowserRouter>
-      <div className='relative z-0 bg-primary'>
-        <div className='bg-hero-pattern bg-cover bg-no-repeat bg-center'>
-          <Navbar />
-          <Hero />
-        </div>
-        <About />
-        <Experience />
-        <Tech />
-        <Works />
-        <Feedbacks />
-        <div className='relative z-0'>
-          <Contact />  
-        </div>
-      </div>
-    </BrowserRouter>
-  );
+  return null;
 }
+const App = () => {
+  const [typeOS, setTypeOS] = useAtom(typeOSAtom);
+  useEffect(() => {
+    const md = new MobileDetect(window.navigator.userAgent);
+    setTypeOS(md.os());
+  }, []);
+  const [isLoaded] = useAtom(isLoadedAtom);
+  DisableScrollRestoration();
+  useFixHeight();
+  useScrollAuto();
+
+  return (  
+      <div className="w-full h-auto">
+        <Navbar />
+        <CanvasLoader />
+        <GlobalCanvas />
+        {isLoaded && <Contents />}
+      </div>
+  );
+};
 
 export default App;

@@ -1,66 +1,57 @@
-import logo from "./logo.svg";
-import backend from "./backend.png";
-import creator from "./creator.png";
-import mobile from "./mobile.png";
-import web from "./web.png";
+import logo from "./whitelogo.png";
+
 import github from "./github.png";
 import menu from "./menu.svg";
 import close from "./close.svg";
 
-import css from "./tech/css.png";
-import docker from "./tech/docker.png";
-import git from "./tech/git.png";
-import html from "./tech/html.png";
-import javascript from "./tech/javascript.png";
-import mongodb from "./tech/mongodb.png";
-import nodejs from "./tech/nodejs.png";
-import reactjs from "./tech/reactjs.png";
-import redux from "./tech/redux.png";
-import tailwind from "./tech/tailwind.png";
-import typescript from "./tech/typescript.png";
-import threejs from "./tech/threejs.png";
-import pre from './tech/pre.png';
-import blender from './tech/blender.png'
-import pts from './tech/pts.png'
+import h2 from "./company/h2.png";
+import freelance from "./company/freelancer.png";
 
-import meta from "./company/meta.png";
-import shopify from "./company/shopify.png";
-import starbucks from "./company/starbucks.png";
-import tesla from "./company/tesla.png";
+import carrent from "./myweb.jpg";
+import jobit from "./autotool.jpg";
+import tripguide from "./englishlearn.jpg";
 
-import carrent from "./carrent.png";
-import jobit from "./jobit.png";
-import tripguide from "./tripguide.png";
+import spritesmoke from "./sprite-hello.png";
+import planet from "./planet.jpg";
+
+import bg2 from "./bg2.jpg";
+import bg from "./uni.jpg";
+import bg3 from "./bg3.jpg";
+
+import layer1 from "./loading/layer1.png";
+import layer2 from "./loading/layer2.png";
+import layer3 from "./loading/layer3.png";
+import layer4 from "./loading/layer4.png";
+import layer5 from "./loading/layer5.png";
+import layer6 from "./loading/layer6.png";
+import layer7 from "./loading/layer7.png";
+import layer8 from "./loading/layer8.png";
+import layer9 from "./loading/layer9.png";
+import layer10 from "./loading/layer10.png";
 
 export {
   logo,
-  backend,
-  creator,
-  mobile,
-  web,
   github,
   menu,
   close,
-  css,
-  docker,
-  git,
-  html,
-  javascript,
-  mongodb,
-  nodejs,
-  reactjs,
-  redux,
-  tailwind,
-  typescript,
-  threejs,
-  meta,
-  shopify,
-  starbucks,
-  tesla,
+  h2,
+  freelance,
   carrent,
   jobit,
   tripguide,
-  pre,
-  blender,
-  pts
+  spritesmoke,
+  bg,
+  planet,
+  bg2,
+  bg3,
+  layer1,
+  layer2,
+  layer3,
+  layer4,
+  layer5,
+  layer6,
+  layer7,
+  layer8,
+  layer9,
+  layer10
 };

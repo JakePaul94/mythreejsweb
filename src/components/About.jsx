@@ -1,38 +1,40 @@
-import React, { useEffect } from "react";
-
+import React, { useEffect, useRef } from "react";
+import styled, { keyframes } from "styled-components";
 import { motion } from "framer-motion";
 
 import { styles } from "../styles";
-import { services } from "../constants";
 import { SectionWrapper } from "../hoc";
 import { fadeIn, textVariant } from "../utils/motion";
 
+import { useAtom } from "jotai";
+import { useIsVisible } from "../hooks/useOnVisible";
+const ShownSection = () => {
+  const showref = useRef();
 
-
+  const isVisible = useIsVisible(showref);
+  useEffect(() => {
+    
+  }, [isVisible]);
+  return <div ref={showref} className="w-full h-[10px]"></div>;
+};
 const ServiceCard = ({ index, title, icon }) => (
-  
-  <div className='xs:w-[250px] w-full'>
+  <div className=" ">
     <motion.div
-      variants={fadeIn("right", "spring", index * 0.5, 0.75)}
-      className='w-full green-pink-gradient p-[1px] rounded-[20px] shadow-card'
+      variants={fadeIn("right", "spring", index * 1, 2)}
+      className="w-full bg-transparent  shadow-card"
     >
       <div
         options={{
           max: 45,
           scale: 1,
-          speed: 450,
+          speed: 1450
         }}
-        className='bg-tertiary rounded-[20px] py-5 px-12 min-h-[280px] flex justify-evenly items-center flex-col'
+        className="bg-transparent  w-full h-full"
       >
-        <img
-          src={icon}
-          alt='web-development'
-          className='w-16 h-16 object-contain'
-        />
-
-        <h3 className='text-white text-[20px] font-bold text-center'>
-          {title}
-        </h3>
+        <div className="cardinfo flex flex-col justify-center gap-10">
+          <img src={icon} className="w-20 h-20 object-cover"></img>
+          <p className="h-12 text-xl text-white">{title}</p>
+        </div>
       </div>
     </motion.div>
   </div>
@@ -40,7 +42,7 @@ const ServiceCard = ({ index, title, icon }) => (
 
 const About = () => {
   return (
-    <>
+    <div className="z-20">
       <motion.div variants={textVariant()}>
         <p className={styles.sectionSubText}>Introduction</p>
         <h2 className={styles.sectionHeadText}>Overview.</h2>
@@ -48,7 +50,7 @@ const About = () => {
 
       <motion.p
         variants={fadeIn("", "", 0.1, 1)}
-        className='mt-4 text-secondary text-[17px] max-w-3xl leading-[30px]'
+        className="mt-4 z-20 text-white text-[17px] max-w-3xl leading-[30px]"
       >
         I'm a skilled software developer with experience in TypeScript and
         JavaScript, and expertise in frameworks like React, Node.js, and
@@ -57,12 +59,10 @@ const About = () => {
         real-world problems. Let's work together to bring your ideas to life!
       </motion.p>
 
-      <div className='mt-20 flex flex-wrap gap-10'>
-        {services.map((service, index) => (
-          <ServiceCard key={service.title} index={index} {...service} />
-        ))}
+      <div className="mt-10 flex h-[600px] content-center justify-center flex-wrap gap-20">
+        <ShownSection />
       </div>
-    </>
+    </div>
   );
 };
 

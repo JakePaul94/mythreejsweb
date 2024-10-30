@@ -1,234 +1,139 @@
 import {
-  mobile,
-  backend,
-  creator,
-  web,
-  javascript,
-  typescript,
-  html,
-  css,
-  reactjs,
-  redux,
-  tailwind,
-  nodejs,
-  mongodb,
-  git,pre,pts,blender,
-  docker,
-  meta,
-  starbucks,
-  tesla,
-  shopify,
+  h2,
+  freelance,
   carrent,
   jobit,
   tripguide,
-  threejs,
+  layer1,
+  layer10,
+  layer2,
+  layer3,
+  layer4,
+  layer5,
+  layer6,
+  layer7,
+  layer8,
+  layer9
 } from "../assets";
 
 export const navLinks = [
   {
     id: "about",
-    title: "About me",
+    title: "About me"
   },
   {
     id: "work",
-    title: "Công việc",
+    title: "Công việc"
   },
   {
     id: "contact",
-    title: "Liên hệ tôi",
-  },
-];
-
-const services = [
-  {
-    title: "Web Fullstack Developer",
-    icon: web,
-  },
-  {
-    title: "Designer",
-    icon: mobile,
-  },
-  {
-    title: "App Developer",
-    icon: backend,
-  },
-  {
-    title: "Content Creator",
-    icon: creator,
-  },
-];
-
-const technologies = [
-  {
-    name: "HTML 5",
-    icon: html,
-  },
-  {
-    name: "CSS 3",
-    icon: css,
-  },
-  {
-    name: "JavaScript",
-    icon: javascript,
-  },
-  {
-    name: "TypeScript",
-    icon: typescript,
-  },
-  {
-    name: "React JS",
-    icon: reactjs,
-  },
-  {
-    name: "Redux Toolkit",
-    icon: redux,
-  },
-  {
-    name: "Tailwind CSS",
-    icon: tailwind,
-  },
-  {
-    name: "Node JS",
-    icon: nodejs,
-  },
-  {
-    name: "MongoDB",
-    icon: mongodb,
-  },
-  {
-    name: "Three JS",
-    icon: threejs,
-  },
-  {
-    name: "git",
-    icon: git,
-  },
-  {
-    name: "pre",
-    icon: pre,
-  },
-  {
-    name: "docker",
-    icon: docker,
-  },
-  {
-    name: "pts",
-    icon: pts,
-  },
-  {
-    name: "blender",
-    icon: blender,
-  },
+    title: "Liên hệ tôi"
+  }
 ];
 
 const experiences = [
   {
     title: "Developer - Designer",
-    company_name: "Công ty Cổ phần Tài chính H2",
-    icon: starbucks,
-    iconBg: "#383E56",
-    date: "March 2018 - April 2022",
+    company_name: " H2 Financial",
+    icon: h2,
+    iconBg: "#383e56",
+    date: "November 2020 - April 2021",
     points: [
       "Developing and maintaining web applications using React.js and other related technologies.",
       "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",
       "Implementing responsive design and ensuring cross-browser compatibility.",
-      "Design , Edit Video and Image  ",
-    ],
-  },
-  
-];
-
-const testimonials = [
-  {
-    testimonial:
-      "I thought it was impossible to make a website as beautiful as our product, but Rick proved me wrong.",
-    name: "Sara Lee",
-    designation: "CFO",
-    company: "Acme Co",
-    image: "https://randomuser.me/api/portraits/women/4.jpg",
+      "Design , Edit Video and Image,Contents... "
+    ]
   },
   {
-    testimonial:
-      "I've never met a web developer who truly cares about their clients' success like Rick does.",
-    name: "Chris Brown",
-    designation: "COO",
-    company: "DEF Corp",
-    image: "https://randomuser.me/api/portraits/men/5.jpg",
-  },
-  {
-    testimonial:
-      "After Rick optimized our website, our traffic increased by 50%. We can't thank them enough!",
-    name: "Lisa Wang",
-    designation: "CTO",
-    company: "456 Enterprises",
-    image: "https://randomuser.me/api/portraits/women/6.jpg",
-  },
+    title: "Developer",
+    company_name: "Freelancer",
+    icon: freelance,
+    iconBg: "#383e56",
+    date: "May 2021 - Now",
+    points: [
+      "Participate in front-end, back-end and full-stack development projects",
+      " I bring extensive experience in delivering high-quality tech solutions, effectively managing projects, and meeting diverse client needs. My work spans across software development, system maintenance, and customized tech support, consistently achieving client satisfaction through efficient and innovative approaches.."
+    ]
+  }
 ];
 
 const projects = [
   {
-    name: "Car Rent",
+    name: "Trinhdc.id.vn",
     description:
-      "Web-based platform that allows users to search, book, and manage car rentals from various providers, providing a convenient and efficient solution for transportation needs.",
+      "My portfolio web - use Blender for model , threejs for WebGL and Vite js for UI ...",
     tags: [
       {
-        name: "react",
-        color: "blue-text-gradient",
+        name: "Vite",
+        color: "blue-text-gradient"
       },
       {
-        name: "mongodb",
-        color: "green-text-gradient",
+        name: "NextJs",
+        color: "green-text-gradient"
       },
       {
-        name: "tailwind",
-        color: "pink-text-gradient",
-      },
+        name: "blender",
+        color: "pink-text-gradient"
+      }
     ],
     image: carrent,
-    source_code_link: "https://github.com/",
+    source_code_link: "https://trinhdc.id.vn/"
   },
   {
-    name: "Job IT",
+    name: "autoTool",
     description:
-      "Web application that enables users to search for job openings, view estimated salary ranges for positions, and locate available jobs based on their current location.",
+      "Desktop application allows users to automatically upload videos, interact on Youtube, Reels, Tiktok platforms, automatically create Facebook satellite pages. Integrate channel analysis, videos and batch video editing.",
     tags: [
+      {
+        name: "electron",
+        color: "blue-text-gradient"
+      },
+      {
+        name: "Python",
+        color: "green-text-gradient"
+      },
       {
         name: "react",
-        color: "blue-text-gradient",
-      },
-      {
-        name: "restapi",
-        color: "green-text-gradient",
-      },
-      {
-        name: "scss",
-        color: "pink-text-gradient",
-      },
+        color: "pink-text-gradient"
+      }
     ],
     image: jobit,
-    source_code_link: "https://github.com/",
+    source_code_link: "https://github.com/"
   },
   {
-    name: "Trip Guide",
+    name: "Apple English ",
     description:
-      "A comprehensive travel booking platform that allows users to book flights, hotels, and rental cars, and offers curated recommendations for popular destinations.",
+      "A multi-platform English learning app for kids offers a fun, engaging, and interactive experience, helping children improve their vocabulary, grammar, and communication skills through games, visual lessons, and exciting quizzes. Suitable for various age groups, the app is available on both mobile devices and computers, allowing kids to learn anytime, anywhere with ease and efficiency.",
     tags: [
       {
-        name: "nextjs",
-        color: "blue-text-gradient",
+        name: "Expo",
+        color: "blue-text-gradient"
       },
       {
-        name: "supabase",
-        color: "green-text-gradient",
+        name: "SQLite",
+        color: "green-text-gradient"
       },
       {
-        name: "css",
-        color: "pink-text-gradient",
-      },
+        name: "React Native",
+        color: "pink-text-gradient"
+      }
     ],
     image: tripguide,
-    source_code_link: "https://github.com/",
-  },
+    source_code_link: "https://github.com/"
+  }
 ];
 
-export { services, technologies, experiences, testimonials, projects };
+const loadings = [
+  { id: 1, img: layer1 },
+  { id: 2, img: layer2 },
+  { id: 3, img: layer3 },
+  { id: 4, img: layer4 },
+  { id: 5, img: layer5 },
+  { id: 6, img: layer6 },
+  { id: 7, img: layer7 },
+  { id: 8, img: layer8 },
+  { id: 9, img: layer9 },
+  { id: 10, img: layer10 }
+];
+export { experiences, projects, loadings };

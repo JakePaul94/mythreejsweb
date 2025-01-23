@@ -63,12 +63,11 @@ const CanvasLoader = () => {
 
   useEffect(() => {
     if (isLoaded) {
-      // Bắt đầu làm mờ dần divWrapRef khi isLoaded = true
       gsap.to(divWrapRef.current, {
         opacity: 0,
-        duration: 1, // Thời gian làm mờ
+        duration: 1, 
         onComplete: () => {
-          setIsUnmounted(true); // Sau khi làm mờ xong, đánh dấu component đã unmount
+          setIsUnmounted(true); 
         }
       });
     }
@@ -99,7 +98,7 @@ const CanvasLoader = () => {
             );
           })}
         </div>
-        <div className="text-[10px] flex flex-col gap-2 text-center"> <p>Trình DC -Trang web giới thiệu bản thân </p><p> Vui lòng chờ vài giây để tải dữ liệu ...</p></div>
+        <div className="text-[10px] flex flex-col gap-2 text-center"> <p>Trình DC - My personal web </p><p> Vui lòng chờ vài giây để tải dữ liệu ...</p></div>
       </div>
     </div>
   );

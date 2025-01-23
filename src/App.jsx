@@ -28,7 +28,7 @@ const App = () => {
   useScrollAuto();
 
   return (  
-      <div className="w-full h-auto">
+      <div className="w-full md:hidden h-auto">
         <Navbar />
         <CanvasLoader />
         <GlobalCanvas />

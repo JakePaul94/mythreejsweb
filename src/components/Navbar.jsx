@@ -20,7 +20,7 @@ const Navbar = () => {
         </div>
    
         <div className="w-14 h-full flex justify-center items-center ">
-          <div
+          {/* <div
             className="relative w-8 h-6 cursor-pointer flex flex-col justify-between"
             onClick={toggleMenu}
           >
@@ -29,7 +29,7 @@ const Navbar = () => {
             ) : (
               <img src={menu} alt="Open menu" className="w-full h-full" />
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </nav>

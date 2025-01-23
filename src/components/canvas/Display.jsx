@@ -1,28 +1,29 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { spritesmoke } from "../../assets";
+import { displaysprites } from "../../assets";
 import { useAtom } from "jotai";
 import { pageStateAtom } from "../../atoms/globalAtoms";
 
-const HelloText = () => {
+const Display = () => {
   const [pageState] = useAtom(pageStateAtom);
   const meshRef = useRef();
   const [texture, setTexture] = useState();
   const [isTextureLoaded, setIsTextureLoaded] = useState(false);
   const [isShow, setIsShow] = useState(true);
 
-  const totalFrames = 40; 
-  const frameWidth = 4; 
-  const frameHeight = 10; 
-  const frameSizeX = 1 / frameWidth; 
-  const frameSizeY = 1 / frameHeight; 
+  const totalFrames = 100; // Tổng số frame trong sprite
+  const frameWidth = 5; // Số frame ngang
+  const frameHeight = 20; // Số frame dọc
+  const frameSizeX = 1 / frameWidth; // Kích thước từng frame theo chiều ngang
+  const frameSizeY = 1 / frameHeight; // Kích thước từng frame theo chiều dọc
+
   useEffect(() => {
-   
+    // Tải sprite sheet
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load(spritesmoke, (loadedTexture) => {
+    textureLoader.load(displaysprites, (loadedTexture) => {
       setTexture(loadedTexture);
-      setIsTextureLoaded(true); 
+      setIsTextureLoaded(true); // Đánh dấu là texture đã được tải
     });
   }, []);
   useEffect(() => {
@@ -70,4 +71,4 @@ const HelloText = () => {
   );
 };
 
-export default HelloText;
+export default Display;

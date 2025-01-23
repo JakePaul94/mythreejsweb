@@ -62,14 +62,14 @@ const Contact = () => {
 
   return (
     <div
-      className={`xl:mt-12 flex xl:flex-row flex-col gap-10 overflow-hidden`}
+      className={`xl:mt-12 flex xl:flex  -row flex-col gap-10 overflow-hidden`}
     >
       <p className={styles.sectionSubText}>Get in touch</p>
       <h3 className={styles.sectionHeadText}>Contact.</h3>
 
       <form
         onSubmit={handleSubmit}
-        className="mt-12 flex flex-col p-4 pt-8 border-2 border-blue-500 bg-blue-900 shadow-3xl rounded-2xl gap-8"
+        className="mt-12 flex flex-col p-4 pt-8 border-2 border-blue-500 transparent shadow-3xl rounded-2xl gap-8"
       >
         <label className="flex flex-col">
           <span className="text-white font-medium mb-4">Your Name</span>
@@ -79,7 +79,7 @@ const Contact = () => {
             value={form.name}
             onChange={handleChange}
             placeholder="What's your name?"
-            className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+            className="bg-blue-800 py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
           />
         </label>
         <label className="flex flex-col">
@@ -89,8 +89,8 @@ const Contact = () => {
             name="email"
             value={form.email}
             onChange={handleChange}
-            placeholder="What's your email?"
-            className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+            placeholder="What's your e mail?"
+            className="bg-blue-800 py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
           />
         </label>
         <label className="flex flex-col">
@@ -101,13 +101,13 @@ const Contact = () => {
             value={form.message}
             onChange={handleChange}
             placeholder="What you want to say?"
-            className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+            className="bg-blue-800 py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
           />
         </label>
 
         <button
           type="submit"
-          className="bg-tertiary py-3 px-8 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-primary"
+          className="bg-[rgba(255,255,255,0.01)] py-3 px-8 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-blue-300primary"
         >
           {loading ? "Sending..." : "Send"}
         </button>

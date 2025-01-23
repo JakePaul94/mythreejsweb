@@ -23,15 +23,12 @@ const GlobalCanvas = () => {
       <Canvas shadows dpr={[2, 2]} gl={{ preserveDrawingBuffer: true }}>
         <MovableCamera />
         <Model />
-
         <PhoenixModel />
         <HelloText />
         <HeaderText />
         <RandomBoxes />
         <MovingPointLight />
-
         <LabModel />
-
         <Preload all />
       </Canvas>
     </div>

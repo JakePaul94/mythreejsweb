@@ -7,7 +7,7 @@ import Works from "./Works";
 
 import Contact from "./Contact";
 import CanvasLoader from "./Loader";
-
+import PCView from './PcViewHandle';
 
 export {
   GlobalCanvas,
@@ -16,5 +16,5 @@ export {
   Experience,
   Works,
   Contact,
-  CanvasLoader, 
+  CanvasLoader, PCView
 };

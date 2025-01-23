@@ -13,6 +13,7 @@ import tripguide from "./englishlearn.jpg";
 
 import spritesmoke from "./sprite-hello.png";
 import planet from "./planet.jpg";
+import displaysprites from './displaysprites.png'
 
 import bg2 from "./bg2.jpg";
 import bg from "./uni.jpg";
@@ -39,7 +40,7 @@ export {
   carrent,
   jobit,
   tripguide,
-  spritesmoke,
+  spritesmoke,displaysprites,
   bg,
   planet,
   bg2,

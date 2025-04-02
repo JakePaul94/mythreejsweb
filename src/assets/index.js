@@ -1,4 +1,4 @@
-import logo from "./whitelogo.png";
+import logo from "./logo.png";
 
 import github from "./github.png";
 import menu from "./menu.svg";
@@ -13,8 +13,8 @@ import tripguide from "./englishlearn.jpg";
 
 import spritesmoke from "./sprite-hello.png";
 import planet from "./planet.jpg";
-import displaysprites from './displaysprites.png'
-
+import displaysprites from "./displaysprites.png";
+import display from "./display.jpg";
 import bg2 from "./bg2.jpg";
 import bg from "./uni.jpg";
 import bg3 from "./bg3.jpg";
@@ -40,7 +40,9 @@ export {
   carrent,
   jobit,
   tripguide,
-  spritesmoke,displaysprites,
+  spritesmoke,
+  displaysprites,
+  display,
   bg,
   planet,
   bg2,

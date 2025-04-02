@@ -7,6 +7,7 @@ import Contents from "./Contents";
 import { useFixHeight } from "./hooks/useFixHeight";
 import MobileDetect from "mobile-detect";
 import AudioPlayer from "./components/Audio";
+import MobileOnlyMessage from "./components/MobileOnlyMessage";
 function DisableScrollRestoration() {
   useEffect(() => {
     if ("scrollRestoration" in window.history) {
@@ -27,13 +28,16 @@ const App = () => {
   useFixHeight();
   useScrollAuto();
 
-  return (  
+  return (
+    <>
       <div className="w-full md:hidden h-auto">
         <Navbar />
         <CanvasLoader />
         <GlobalCanvas />
         {isLoaded && <Contents />}
       </div>
+      <MobileOnlyMessage />
+    </>
   );
 };
 

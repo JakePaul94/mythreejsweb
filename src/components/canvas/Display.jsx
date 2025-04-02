@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { displaysprites } from "../../assets";
+import { displaysprites, display } from "../../assets";
 import { useAtom } from "jotai";
 import { pageStateAtom } from "../../atoms/globalAtoms";
 
@@ -11,7 +11,7 @@ const Display = () => {
   const [texture, setTexture] = useState();
   const [isTextureLoaded, setIsTextureLoaded] = useState(false);
   const [isShow, setIsShow] = useState(true);
-
+  const [isSpriteFinished, setIsSpriteFinished] = useState(false);
   const totalFrames = 100; // Tổng số frame trong sprite
   const frameWidth = 5; // Số frame ngang
   const frameHeight = 20; // Số frame dọc
@@ -41,6 +41,10 @@ const Display = () => {
     if (meshRef.current && texture) {
       const elapsedTime = state.clock.getElapsedTime();
       const frameIndex = Math.floor((elapsedTime * 10) % totalFrames); // Thay đổi frame theo thời gian
+      if (frameIndex >= totalFrames) {
+        setIsSpriteFinished(true);
+        return;
+      }
       const column = frameIndex % frameWidth; // Cột hiện tại
       const row = Math.floor(frameIndex / frameWidth); // Hàng hiện tại
 
@@ -56,15 +60,17 @@ const Display = () => {
 
   return (
     <>
-      {isTextureLoaded && texture && isShow && (
+      {isTextureLoaded && !isSpriteFinished && isShow && (
         <mesh ref={meshRef} position={[0, 1.3, 0]}>
           <planeGeometry args={[1, 0.4]} />
+          <meshBasicMaterial map={texture} transparent opacity={1} />
+        </mesh>
+      )}
 
-          <meshBasicMaterial
-            map={texture}
-            transparent
-            opacity={1} // Độ mờ của khói (có thể điều chỉnh)
-          />
+      {isSpriteFinished && (
+        <mesh position={[0, 1.3, 0]}>
+          <planeGeometry args={[1, 0.4]} />
+          <meshBasicMaterial map={'red'} transparent opacity={1} />
         </mesh>
       )}
     </>

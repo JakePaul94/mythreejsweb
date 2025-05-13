@@ -19,16 +19,6 @@ export const useScrollAuto = () => {
     const touch = event.touches[0];
     setLastY(touch.clientY);
   };
-  const logstate = (action) => {
-    console.log(
-      "windowsc :" +
-        window.scrollY +
-        "   block  :  " +
-        blockTouch +
-        " action: " +
-        action
-    );
-  };
   const handleTouchMove = (event) => {
       const touch = event.touches[0];
     const moveY = touch.clientY;

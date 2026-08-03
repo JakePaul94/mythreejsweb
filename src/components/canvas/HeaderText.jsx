@@ -7,7 +7,7 @@ import MobileDetect from "mobile-detect";
 const HeaderText = () => {
   const [pageState] = useAtom(pageStateAtom);
   const textRef = useRef();
-  const textRef2 = useRef();
+  // const textRef2 = useRef();
   
   const [typeOS, setTypeOS] = useAtom(typeOSAtom);
   const md = new MobileDetect(window.navigator.userAgent);
@@ -44,22 +44,22 @@ const HeaderText = () => {
       }
     });
 
-    // Di chuyển văn bản thứ hai đến vị trí trung gian
-    gsap.to(textRef2.current.position, {
-      x: intermediatePosition2[0],
-      y: intermediatePosition2[1],
-      z: intermediatePosition2[2],
-      duration: durationToIntermediate,
-      onComplete: () => {
-        // Sau khi hoàn thành giai đoạn 1, di chuyển đến vị trí mục tiêu
-        gsap.to(textRef2.current.position, {
-          x: targetPosition2[0],
-          y: targetPosition2[1],
-          z: targetPosition2[2],
-          duration: durationToTarget
-        });
-      }
-    });
+  //   // Di chuyển văn bản thứ hai đến vị trí trung gian
+  //   gsap.to(textRef2.current.position, {
+  //     x: intermediatePosition2[0],
+  //     y: intermediatePosition2[1],
+  //     z: intermediatePosition2[2],
+  //     duration: durationToIntermediate,
+  //     onComplete: () => {
+  //       // Sau khi hoàn thành giai đoạn 1, di chuyển đến vị trí mục tiêu
+  //       gsap.to(textRef2.current.position, {
+  //         x: targetPosition2[0],
+  //         y: targetPosition2[1],
+  //         z: targetPosition2[2],
+  //         duration: durationToTarget
+  //       });
+  //     }
+  //   });
   };
 
   useEffect(() => {
@@ -96,14 +96,14 @@ const HeaderText = () => {
       >
         I   A M   T R I N H . D C
       </Text>
-      <Text
+      {/* <Text
         ref={textRef2}
         position={finalPosition2.current} // Sử dụng vị trí cuối cùng
         fontSize={0.02}
         color="white"
       >
         F U L L S T A C K D E V E L O P E R - D E S I G N E R - C O D E R
-      </Text>
+      </Text> */}
     </>
   );
 };

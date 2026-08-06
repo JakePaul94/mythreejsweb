@@ -61,13 +61,12 @@ const ProjectCard = ({
     </motion.div>
   );
 };
-
 const Works = () => {
   return (
     <>
       <motion.div variants={textVariant()}>
-        <p className='text-[#dfd9ff] font-medium lg:text-[30px] sm:text-[26px] xs:text-[20px] text-[16px] lg:leading-[40px]'>My work</p>
-        <h2 className={`${styles.sectionHeadText}`}>My Personal Projects</h2>
+        <p className='text-[#dfd9ff] font-medium lg:text-[30px] sm:text-[26px] xs:text-[20px] text-[16px] lg:leading-[40px]'>Sản phẩm của tôi</p>
+        <h2 className={`${styles.sectionHeadText}`}>Các dự án cá nhân</h2>
       </motion.div>
 
       <div className='w-full flex'>
@@ -75,11 +74,11 @@ const Works = () => {
           variants={fadeIn("", "", 0.1, 1)}
           className='mt-3 text-slate-200 text-[17px] max-w-3xl leading-[30px]'
         >
-          Following projects showcases my skills and experience through
-          real-world examples of my work. Each project is briefly described with
-          links to code repositories and live demos in it. It reflects my
-          ability to solve complex problems, work with different technologies,
-          and manage projects effectively.
+          Những dự án dưới đây thể hiện kỹ năng và kinh nghiệm của tôi thông qua
+          các ví dụ thực tế. Mỗi dự án đều được mô tả ngắn gọn kèm theo đường dẫn
+          đến mã nguồn (source code) và bản chạy thử trực tiếp (live demo). Chúng
+          phản ánh khả năng giải quyết các vấn đề phức tạp, làm việc với nhiều công
+          nghệ khác nhau và quản lý dự án một cách hiệu quả.
         </motion.p>
       </div>
 
@@ -91,5 +90,4 @@ const Works = () => {
     </>
   );
 };
-
 export default SectionWrapper(Works, "");

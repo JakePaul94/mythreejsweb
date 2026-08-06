@@ -7,9 +7,9 @@ import close from "./close.svg";
 import h2 from "./company/h2.png";
 import freelance from "./company/freelancer.png";
 
-import carrent from "./myweb.jpg";
-import jobit from "./autotool.jpg";
-import tripguide from "./englishlearn.jpg";
+import carrent from "./tridchinese.png";
+import jobit from "./tridmusic.png";
+import tridos from "./tridos.png";
 
 import spritesmoke from "./sprite-hello.png";
 import planet from "./planet.jpg";
@@ -39,7 +39,7 @@ export {
   freelance,
   carrent,
   jobit,
-  tripguide,
+  tridos,
   spritesmoke,
   displaysprites,
   display,

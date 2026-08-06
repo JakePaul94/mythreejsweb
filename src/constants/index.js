@@ -3,7 +3,7 @@ import {
   freelance,
   carrent,
   jobit,
-  tripguide,
+  tridos,
   layer1,
   layer10,
   layer2,
@@ -33,36 +33,35 @@ export const navLinks = [
 
 const experiences = [
   {
-    title: "Developer - Designer",
+    title: "Lập trình viên - Thiết kế",
     company_name: " H2 Financial",
     icon: h2,
     iconBg: "#383e56",
-    date: "November 2020 - April 2021",
+    date: "Tháng 11/2020 - Tháng 4/2021",
     points: [
-      "Developing and maintaining web applications using React.js and other related technologies.",
-      "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",
-      "Implementing responsive design and ensuring cross-browser compatibility.",
-      "Design , Edit Video and Image,Contents... "
+      "Phát triển và bảo trì các ứng dụng web bằng React.js và các công nghệ liên quan khác.",
+      "Hợp tác với các đội ngũ liên chức năng bao gồm nhà thiết kế, quản lý sản phẩm và các lập trình viên khác để tạo ra các sản phẩm chất lượng cao.",
+      "Triển khai thiết kế đáp ứng (responsive) và đảm bảo tính tương thích trên nhiều trình duyệt.",
+      "Thiết kế, chỉnh sửa video, hình ảnh và nội dung..."
     ]
   },
   {
-    title: "Developer",
-    company_name: "Freelancer",
+    title: "Lập trình viên",
+    company_name: "Tự do (Freelancer)",
     icon: freelance,
     iconBg: "#383e56",
-    date: "May 2021 - Now",
+    date: "Tháng 5/2021 - Hiện tại",
     points: [
-      "Participate in front-end, back-end and full-stack development projects",
-      " I bring extensive experience in delivering high-quality tech solutions, effectively managing projects, and meeting diverse client needs. My work spans across software development, system maintenance, and customized tech support, consistently achieving client satisfaction through efficient and innovative approaches.."
+      "Tham gia vào các dự án phát triển front-end, back-end và full-stack.",
+      "Tối có nhiều kinh nghiệm trong việc cung cấp các giải pháp công nghệ chất lượng cao, quản lý dự án hiệu quả và đáp ứng các nhu cầu đa dạng của khách hàng. Công việc của tôi bao gồm phát triển phần mềm, bảo trì hệ thống và hỗ trợ kỹ thuật theo yêu cầu, luôn đạt được sự hài lòng của khách hàng thông qua các phương pháp hiệu quả và sáng tạo."
     ]
   }
 ];
-
 const projects = [
   {
-    name: "Trinhdc.id.vn",
+    name: "TriD - Languages",
     description:
-      "My portfolio web - use Blender for model , threejs for WebGL and Vite js for UI ...",
+      "Ứng dụng học ngôn ngữ bao gồm từ điển , thẻ từ vựng và ứng dụng AI vào học tập.",
     tags: [
       {
         name: "Vite",
@@ -81,20 +80,20 @@ const projects = [
     source_code_link: "https://trinhdc.id.vn/"
   },
   {
-    name: "autoTool",
+    name: "TriD - Music",
     description:
-      "Desktop application allows users to automatically upload videos, interact on Youtube, Reels, Tiktok platforms, automatically create Facebook satellite pages. Integrate channel analysis, videos and batch video editing.",
+      "Ứng dụng nghe nhạc đầy đủ tính năng với giao diện hiện đại.",
     tags: [
       {
-        name: "electron",
+        name: "Expo",
         color: "blue-text-gradient"
       },
       {
-        name: "Python",
+        name: "Swift - Kotlin",
         color: "green-text-gradient"
       },
       {
-        name: "react",
+        name: "react-native",
         color: "pink-text-gradient"
       }
     ],
@@ -102,16 +101,16 @@ const projects = [
     source_code_link: "https://github.com/"
   },
   {
-    name: "Apple English ",
+    name: "TriD - OS ",
     description:
-      "A multi-platform English learning app for kids offers a fun, engaging, and interactive experience, helping children improve their vocabulary, grammar, and communication skills through games, visual lessons, and exciting quizzes. Suitable for various age groups, the app is available on both mobile devices and computers, allowing kids to learn anytime, anywhere with ease and efficiency.",
+      "Hệ điều hành AI - Hệ thống các AI Agent và khung liên kết , điều phối giữ chúng , có thể ứng dụng gần như mọi trường hợp trên tất cả nền tảng ( web, mobile app).",
     tags: [
       {
-        name: "Expo",
+        name: "React",
         color: "blue-text-gradient"
       },
       {
-        name: "SQLite",
+        name: "Python",
         color: "green-text-gradient"
       },
       {
@@ -119,7 +118,7 @@ const projects = [
         color: "pink-text-gradient"
       }
     ],
-    image: tripguide,
+    image: tridos,
     source_code_link: "https://github.com/"
   }
 ];

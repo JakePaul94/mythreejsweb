@@ -24,9 +24,7 @@ const ProjectCard = ({
             alt={name}
             className="w-full  h-full shadow-lg object-cover bg-white rounded-2xl"
           />
-
           <div className="absolute inset-0 flex justify-end m-3 card-img_hover">
-            {source_code_link && (
               <div
                 onClick={() => window.open(source_code_link, "_blank")}
                 className="black-gradient w-10 h-10 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 transition-all"
@@ -38,7 +36,6 @@ const ProjectCard = ({
                   className="w-1/2 h-1/2 object-contain"
                 />
               </div>
-            )}
           </div>
         </div>
 
@@ -48,19 +45,7 @@ const ProjectCard = ({
             {description}
           </p>
         </div>
-        {source_code_link && (
-          <p className="mt-3 text-[13px] text-secondary truncate">
-            Source:{" "}
-            <a
-              href={source_code_link}
-              target="_blank"
-              rel="noreferrer"
-              className="text-blue-400 hover:underline"
-            >
-              {source_code_link}
-            </a>
-          </p>
-        )}
+ 
         <div className="mt-4 flex flex-wrap gap-2">
           {tags.map((tag) => (
             <p

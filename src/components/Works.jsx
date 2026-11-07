@@ -16,15 +16,24 @@ const ProjectCard = ({
   source_code_link,
 }) => {
   return (
-    <motion.div variants={fadeIn("up", "spring", index * 0.5, 0.75)}>
-      <div className="bg-[rgba(0,222,255,0.07)] shadow-2xl p-5 rounded-2xl sm:w-[360px] w-full">
+    <motion.div
+      // Tự kích hoạt animation theo từng thẻ, không phụ thuộc vào section cha
+      variants={fadeIn("up", "spring", (index % 3) * 0.2, 0.75)}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.1 }}
+      className="w-full sm:w-[360px] min-w-0"
+    >
+      <div className="bg-[rgba(0,222,255,0.07)] shadow-2xl p-5 rounded-2xl w-full">
         <div className="relative w-full h-[200px]">
           <img
             src={image}
             alt={name}
-            className="w-full  h-full shadow-lg object-cover bg-white rounded-2xl"
+            className="w-full h-full shadow-lg object-cover bg-white rounded-2xl"
           />
-          <div className="absolute inset-0 flex justify-end m-3 card-img_hover">
+
+          {source_code_link && (
+            <div className="absolute inset-0 flex justify-end m-3 card-img_hover">
               <div
                 onClick={() => window.open(source_code_link, "_blank")}
                 className="black-gradient w-10 h-10 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 transition-all"
@@ -36,16 +45,33 @@ const ProjectCard = ({
                   className="w-1/2 h-1/2 object-contain"
                 />
               </div>
-          </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-5">
-          <h3 className="text-white font-bold text-[24px]">{name}</h3>
-          <p className="mt-2 text-secondary text-[14px] leading-relaxed">
+          <h3 className="text-white font-bold text-[24px] break-words">
+            {name}
+          </h3>
+          <p className="mt-2 text-secondary text-[14px] leading-relaxed break-words">
             {description}
           </p>
         </div>
- 
+
+        {source_code_link && (
+          <p className="mt-3 text-[13px] text-secondary truncate">
+            Source:{" "}
+            <a
+              href={source_code_link}
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-400 hover:underline"
+            >
+              {source_code_link.replace(/^https?:\/\//, "")}
+            </a>
+          </p>
+        )}
+
         <div className="mt-4 flex flex-wrap gap-2">
           {tags.map((tag) => (
             <p
@@ -84,7 +110,7 @@ const Works = () => {
         </motion.p>
       </div>
 
-      <div className="mt-20 flex flex-wrap gap-7">
+      <div className="mt-20 w-full flex flex-wrap gap-7">
         {projects.map((project, index) => (
           <ProjectCard key={`project-${index}`} index={index} {...project} />
         ))}

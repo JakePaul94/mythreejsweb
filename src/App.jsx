@@ -26,10 +26,53 @@ function DisableScrollRestoration() {
   return null;
 }
 
-// Nút chat chỉ hiện ở trang chủ "/"
-const ChatButtonWrapper = () => {
+/**
+ * Chặn mọi cử chỉ vuốt / lăn chuột / phím cuộn khi `locked = true`.
+ * Dùng pha capture + stopPropagation để chặn cả các listener khác trên window.
+ */
+function useLockGestures(locked) {
+  useEffect(() => {
+    if (!locked) return;
+
+    const prevOverflow = document.body.style.overflow;
+    const prevOverscroll = document.documentElement.style.overscrollBehavior;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overscrollBehavior = "none";
+
+    const stop = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    const onKey = (e) => {
+      if (
+        ["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(
+          e.key
+        )
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    const opts = { passive: false, capture: true };
+    const events = ["wheel", "touchstart", "touchmove", "touchend"];
+
+    events.forEach((ev) => window.addEventListener(ev, stop, opts));
+    window.addEventListener("keydown", onKey);
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.documentElement.style.overscrollBehavior = prevOverscroll;
+      events.forEach((ev) => window.removeEventListener(ev, stop, opts));
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [locked]);
+}
+
+// Nút chat chỉ hiện ở trang chủ "/" và sau khi load xong
+const ChatButtonWrapper = ({ isLoaded }) => {
   const { pathname } = useLocation();
-  if (pathname !== "/") return null;
+  if (pathname !== "/" || !isLoaded) return null;
   return <FloatingChatButton />;
 };
 
@@ -47,8 +90,11 @@ const App = () => {
 
   useFixHeight();
 
-  // Tắt toàn bộ wheel/touch handler khi đang ở /chat
-  useScrollAuto(!isChat);
+  // Chưa load xong ở trang chủ -> khóa vuốt/cuộn
+  useLockGestures(!isLoaded && !isChat);
+
+  // Chỉ bật cuộn tự động khi đã load xong và không ở /chat
+  useScrollAuto(isLoaded && !isChat);
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
@@ -78,7 +124,7 @@ const App = () => {
           />
         </Routes>
 
-        <ChatButtonWrapper />
+        <ChatButtonWrapper isLoaded={isLoaded} />
       </AuthProvider>
     </GoogleOAuthProvider>
   );

@@ -7,35 +7,33 @@ import { gsap } from "gsap";
 
 const RandomBoxes = ({ count = 30, size = 0.01, range = 3 }) => {
   const [pageState] = useAtom(pageStateAtom);
-  const boxes = useRef([]); // Sử dụng useRef để giữ trạng thái các hộp
+  const boxes = useRef([]); 
   const isFirstRender = useRef(true);
-  // Tạo các hộp ngẫu nhiên
   useMemo(() => {
     const boxArray = [];
     for (let i = 0; i < count; i++) {
       const geometry = new THREE.BoxGeometry(size, size, size);
       const material = new THREE.MeshStandardMaterial({
         color: 0xffffff,
-        emissive: 0xffffff // Tạo màu phát sáng
+        emissive: 0xffffff 
       });
       const box = new THREE.Mesh(geometry, material);
 
-      // Tạo vị trí ngẫu nhiên trong khu vực giới hạn
       box.position.set(
         (Math.random() - 0.5) * 1.5,
         (Math.random() - 0.2) * 3,
         (Math.random() - 0.8) * 1
       );
 
-      boxArray.push(box); // Thêm hộp vào mảng
+      boxArray.push(box); 
     }
-    boxes.current = boxArray; // Gán mảng hộp vào ref
+    boxes.current = boxArray; 
   }, []);
 
   useFrame(({ clock }) => {
     boxes.current.forEach((box, index) => {
-      const amplitude = 0.001; // Biên độ di chuyển
-      const speed = 2; // Tốc độ di chuyển
+      const amplitude = 0.001; 
+      const speed = 2; 
       box.position.y +=
         amplitude * Math.sin(clock.getElapsedTime() * speed + index);
 
@@ -77,18 +75,8 @@ const RandomBoxes = ({ count = 30, size = 0.01, range = 3 }) => {
           });
         });
       }
-      // if (pageState.current === 2 && pageState.previous === 1) {
-      //   boxes.current.forEach((box, index) => {
-      //     gsap.to(box.position, {
-      //       x: 0,
-      //       y: 1,
-      //       z: 0,
-      //       duration: 0.5
-      //     });
-      //   });
-      // }
     }
-  }, [pageState]); // Chỉ chạy lại khi modelState thay đổi
+  }, [pageState]); 
 
   return (
     <>

@@ -253,7 +253,7 @@ const CanvasLoader = () => {
 
           {/* Dòng chữ chờ với 3 chấm động */}
           <p className="text-[9px] sm:text-[10px] opacity-40 tracking-wide flex items-center justify-center">
-            Vui lòng chờ vài giây để tải dữ liệu
+            Please wait a few seconds for the data to load
             {/* Cố định width của span để chữ không bị giật (nhảy qua lại) khi thêm dấu chấm */}
             <span className="inline-block w-3 text-left">{dots}</span>
           </p>

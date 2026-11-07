@@ -1,9 +1,10 @@
 import {
   h2,
   freelance,
-  carrent,
-  jobit,
+  tridchinese,
+  tridmusic,
   tridos,
+  thanhkim,
   layer1,
   layer10,
   layer2,
@@ -13,114 +14,153 @@ import {
   layer6,
   layer7,
   layer8,
-  layer9
+  layer9,
+  kimtruongphuc,
 } from "../assets";
 
 export const navLinks = [
   {
     id: "about",
-    title: "About me"
+    title: "About me",
   },
   {
     id: "work",
-    title: "Công việc"
+    title: "Công việc",
   },
   {
     id: "contact",
-    title: "Liên hệ tôi"
-  }
+    title: "Liên hệ tôi",
+  },
 ];
 
 const experiences = [
   {
-    title: "Lập trình viên - Thiết kế",
+    title: "Developer - Designer",
     company_name: " H2 Financial",
     icon: h2,
     iconBg: "#383e56",
-    date: "Tháng 11/2020 - Tháng 4/2021",
+    date: "November 2020 - April 2021",
     points: [
-      "Phát triển và bảo trì các ứng dụng web bằng React.js và các công nghệ liên quan khác.",
-      "Hợp tác với các đội ngũ liên chức năng bao gồm nhà thiết kế, quản lý sản phẩm và các lập trình viên khác để tạo ra các sản phẩm chất lượng cao.",
-      "Triển khai thiết kế đáp ứng (responsive) và đảm bảo tính tương thích trên nhiều trình duyệt.",
-      "Thiết kế, chỉnh sửa video, hình ảnh và nội dung..."
-    ]
+      "Developing and maintaining web applications using React.js and other related technologies.",
+      "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",
+      "Implementing responsive design and ensuring cross-browser compatibility.",
+      "Design , Edit Video and Image,Contents... ",
+    ],
   },
   {
-    title: "Lập trình viên",
-    company_name: "Tự do (Freelancer)",
+    title: "Developer",
+    company_name: "Freelancer",
     icon: freelance,
     iconBg: "#383e56",
-    date: "Tháng 5/2021 - Hiện tại",
+    date: "May 2021 - Now",
     points: [
-      "Tham gia vào các dự án phát triển front-end, back-end và full-stack.",
-      "Tối có nhiều kinh nghiệm trong việc cung cấp các giải pháp công nghệ chất lượng cao, quản lý dự án hiệu quả và đáp ứng các nhu cầu đa dạng của khách hàng. Công việc của tôi bao gồm phát triển phần mềm, bảo trì hệ thống và hỗ trợ kỹ thuật theo yêu cầu, luôn đạt được sự hài lòng của khách hàng thông qua các phương pháp hiệu quả và sáng tạo."
-    ]
-  }
+      "Participate in front-end, back-end and full-stack development projects",
+      " I bring extensive experience in delivering high-quality tech solutions, effectively managing projects, and meeting diverse client needs. My work spans across software development, system maintenance, and customized tech support, consistently achieving client satisfaction through efficient and innovative approaches..",
+    ],
+  },
 ];
 const projects = [
   {
-    name: "TriD - Languages",
+    name: "Social Media Auto-Poster",
     description:
-      "Ứng dụng học ngôn ngữ bao gồm từ điển , thẻ từ vựng và ứng dụng AI vào học tập.",
+      "An automated content scheduling & cross-posting platform designed to streamline real estate marketing. Reduces manual posting effort by automating scheduled publication, media management, and multi-channel campaign tracking.",
     tags: [
       {
-        name: "Vite",
-        color: "blue-text-gradient"
+        name: "React Native",
+        color: "blue-text-gradient",
       },
       {
-        name: "NextJs",
-        color: "green-text-gradient"
+        name: "nodejs",
+        color: "green-text-gradient",
       },
       {
-        name: "blender",
-        color: "pink-text-gradient"
-      }
+        name: "AI Agent",
+        color: "pink-text-gradient",
+      },
     ],
-    image: carrent,
-    source_code_link: "https://trinhdc.id.vn/"
+    image: thanhkim,
+    source_code_link: "https://github.com/JakePaul94/thanhkimbds",
   },
   {
-    name: "TriD - Music",
+    name: "Boiler & Facility Management",
     description:
-      "Ứng dụng nghe nhạc đầy đủ tính năng với giao diện hiện đại.",
+      "An enterprise system for industrial boiler operations and maintenance. Features preventative inspection workflows, location-based cleaning tasks, water quality testing with photo reports, on-site QR scanning, and role-based access control.",
     tags: [
       {
-        name: "Expo",
-        color: "blue-text-gradient"
+        name: "React Native",
+        color: "blue-text-gradient",
       },
       {
-        name: "Swift - Kotlin",
-        color: "green-text-gradient"
+        name: "nodejs",
+        color: "green-text-gradient",
       },
       {
-        name: "react-native",
-        color: "pink-text-gradient"
-      }
+        name: "sql",
+        color: "white-text-gradient",
+      },
     ],
-    image: jobit,
-    source_code_link: "https://github.com/"
+    image: kimtruongphuc,
+    source_code_link: "https://github.com/JakePaul94/kimtruongphuc_server",
   },
   {
-    name: "TriD - OS ",
+    name: "TriD - OS",
     description:
-      "Hệ điều hành AI - Hệ thống các AI Agent và khung liên kết , điều phối giữ chúng , có thể ứng dụng gần như mọi trường hợp trên tất cả nền tảng ( web, mobile app).",
+      "An AI operating system: a network of AI agents plus a framework that connects and orchestrates them, adaptable to almost any use case on every platform (web, mobile app).",
     tags: [
       {
         name: "React",
-        color: "blue-text-gradient"
+        color: "blue-text-gradient",
       },
       {
         name: "Python",
-        color: "green-text-gradient"
+        color: "green-text-gradient",
       },
       {
         name: "React Native",
-        color: "pink-text-gradient"
-      }
+        color: "pink-text-gradient",
+      },
     ],
     image: tridos,
-    source_code_link: "https://github.com/"
-  }
+  },{
+  name: "Learn Chinese",
+  description:
+    "A React Native (Expo) app for learning Chinese: look up words in a built-in dictionary, view word details, and save words into custom study groups.",
+  tags: [
+    {
+      name: "React Native",
+      color: "blue-text-gradient",
+    },
+    {
+      name: "Expo",
+      color: "green-text-gradient",
+    },
+    {
+      name: "Android",
+      color: "pink-text-gradient",
+    },
+  ],
+  image: tridchinese,
+},
+{
+  name: "Music Player",
+  description:
+    "A React Native (Expo) music player for Android with a sleep timer, backed by native Android code for reliable background playback.",
+  tags: [
+    {
+      name: "React Native",
+      color: "blue-text-gradient",
+    },
+    {
+      name: "Expo",
+      color: "green-text-gradient",
+    },
+    {
+      name: "Android",
+      color: "pink-text-gradient",
+    },
+  ],
+  image: tridmusic,
+},
 ];
 
 const loadings = [
@@ -133,6 +173,6 @@ const loadings = [
   { id: 7, img: layer7 },
   { id: 8, img: layer8 },
   { id: 9, img: layer9 },
-  { id: 10, img: layer10 }
+  { id: 10, img: layer10 },
 ];
 export { experiences, projects, loadings };

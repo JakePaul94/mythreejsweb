@@ -7,9 +7,11 @@ import close from "./close.svg";
 import h2 from "./company/h2.png";
 import freelance from "./company/freelancer.png";
 
-import carrent from "./tridchinese.png";
-import jobit from "./tridmusic.png";
+import tridchinese from "./tridchinese.png";
+import tridmusic from "./tridmusic.png";
 import tridos from "./tridos.png";
+import kimtruongphuc from "./kimtruongphuc.webp"
+import thanhkim from "./thanhkim.png"
 
 import spritesmoke from "./sprite-hello.png";
 import planet from "./planet.jpg";
@@ -18,6 +20,7 @@ import display from "./display.jpg";
 import bg2 from "./bg2.jpg";
 import bg from "./uni.jpg";
 import bg3 from "./bg3.jpg";
+
 
 import layer1 from "./loading/layer1.png";
 import layer2 from "./loading/layer2.png";
@@ -37,9 +40,11 @@ export {
   close,
   h2,
   freelance,
-  carrent,
-  jobit,
+  tridchinese,
+  tridmusic,
   tridos,
+  kimtruongphuc,
+  thanhkim,
   spritesmoke,
   displaysprites,
   display,

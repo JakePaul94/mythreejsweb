@@ -1,54 +1,104 @@
 import { useEffect, useRef, useState } from "react";
 import { useAtom } from "jotai";
 import { pageStateAtom, windowHeightAtom } from "../atoms/globalAtoms";
-import { useSwipeable } from "react-swipeable";
 
-export const useScrollAuto = () => {
-  const [pageState, setPageState] = useAtom(pageStateAtom);
+/**
+ * @param {boolean} enabled - false khi đang ở /chat để không chặn wheel/touch
+ */
+export const useScrollAuto = (enabled = true) => {
+  const [, setPageState] = useAtom(pageStateAtom);
   const [windowHeight] = useAtom(windowHeightAtom);
-  const [blockTouch, setBlockTouch] = useState(false);
-  const [lastY, setLastY] = useState(0);
+  const [, setBlockTouch] = useState(false);
 
-  const timeoutRef = useRef(null);
-  const audioRef = useRef(new Audio("./display.mp3"));
-  // Dùng ref thay state để tránh stale closure trong event listener
-  const blockTouchRef = useRef(false);
+  const timeoutRef = useRef(null); // timer mở khóa block
+  const scrollTimerRef = useRef(null); // timer scrollTo trong changePage
+  const audioTimerRef = useRef(null); // timer phát audio
+  const audioRef = useRef(null);
+  const blockRef = useRef(false);
   const lastYRef = useRef(0);
+  const lastWheelRef = useRef(0); // thời điểm wheel event gần nhất
+
+  if (!audioRef.current && typeof Audio !== "undefined") {
+    audioRef.current = new Audio("./display.mp3");
+  }
 
   const clearExistingTimeout = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   };
 
   const playAudio = (delay = 2000) => {
-    setTimeout(() => {
-      audioRef.current.play().catch((err) =>
-        console.error("Unable to play audio:", err)
-      );
+    clearTimeout(audioTimerRef.current);
+    audioTimerRef.current = setTimeout(() => {
+      audioRef.current
+        ?.play()
+        .catch((err) => console.error("Unable to play audio:", err));
     }, delay);
   };
 
   const blockChange = (time) => {
-    blockTouchRef.current = true;
+    blockRef.current = true;
     setBlockTouch(true);
     clearExistingTimeout();
     timeoutRef.current = setTimeout(() => {
-      blockTouchRef.current = false;
+      blockRef.current = false;
       setBlockTouch(false);
     }, time);
   };
 
-  // Dùng window.scrollTo native — giữ nguyên behavior cho Three.js
   const changePage = (curr, prev, yscroll, timescroll) => {
     clearExistingTimeout();
     setPageState({ current: curr, previous: prev });
-    setTimeout(() => {
+
+    clearTimeout(scrollTimerRef.current);
+    scrollTimerRef.current = setTimeout(() => {
       window.scrollTo({ top: yscroll, behavior: "smooth" });
     }, timescroll);
   };
 
   useEffect(() => {
-    if (!windowHeight) return;
+    if (!enabled || !windowHeight) return;
 
+    /**
+     * Logic chuyển trang dùng chung cho touch + wheel.
+     * direction: "down" | "up"
+     * Trả về true nếu đã xử lý chuyển trang.
+     */
+    const handleDirection = (direction) => {
+      const scrollSnap =
+        Math.round(window.scrollY / windowHeight) * windowHeight;
+
+      if (scrollSnap === 0) {
+        if (direction === "down") {
+          playAudio(2000);
+          changePage(1, 0, windowHeight, 900);
+          blockChange(6000);
+          return true;
+        }
+        return false;
+      }
+
+      if (scrollSnap === windowHeight) {
+        if (direction === "down") {
+          changePage(2, 1, windowHeight * 2, 500);
+          blockChange(1000);
+        } else {
+          changePage(0, 1, 0, 500);
+          blockChange(3000);
+        }
+        return true;
+      }
+
+      if (scrollSnap === windowHeight * 2 && direction === "up") {
+        changePage(1, 2, windowHeight, 500);
+        playAudio(2000);
+        blockChange(6000);
+        return true;
+      }
+
+      return false;
+    };
+
+    /* ================= TOUCH (mobile) ================= */
     const handleTouchStart = (e) => {
       lastYRef.current = e.touches[0].clientY;
     };
@@ -72,13 +122,14 @@ export const useScrollAuto = () => {
     const handleTouchEnd = (e) => {
       const endY = e.changedTouches[0].clientY;
       const deltaY = Math.round(endY - lastYRef.current);
+      const isBlocked = blockRef.current;
 
-      // Fix stale closure: đọc từ ref thay vì state
-      const isBlocked = blockTouchRef.current;
-
-      // Unblock nếu đang ở section 2 (free scroll zone)
-      if (Math.abs(deltaY) > 20 && isBlocked && window.scrollY === windowHeight * 2) {
-        blockTouchRef.current = false;
+      if (
+        Math.abs(deltaY) > 20 &&
+        isBlocked &&
+        window.scrollY === windowHeight * 2
+      ) {
+        blockRef.current = false;
         setBlockTouch(false);
         return;
       }
@@ -88,44 +139,80 @@ export const useScrollAuto = () => {
         return;
       }
 
-      // Dùng scrollY snapshot để tránh floating point lệch 1-2px
-      const scrollSnap = Math.round(window.scrollY / windowHeight) * windowHeight;
+      // vuốt lên (deltaY < 0) = cuộn xuống
+      const handled = handleDirection(deltaY < 0 ? "down" : "up");
+      if (!handled) e.preventDefault();
+    };
 
-      if (scrollSnap === 0) {
-        if (deltaY < 0) {
-          playAudio(2000);
-          changePage(1, 0, windowHeight, 900);
-          blockChange(6000);
-        } else {
-          blockChange(1);
-        }
-      } else if (scrollSnap === windowHeight) {
-        if (deltaY < 0) {
-          changePage(2, 1, windowHeight * 2, 500);
-          blockChange(1000);
-        } else {
-          changePage(0, 1, 0, 500);
-          blockChange(3000);
-        }
-      } else if (scrollSnap === windowHeight * 2 && deltaY > 0) {
-        changePage(1, 2, windowHeight, 500);
-        playAudio(2000);
-        blockChange(6000);
-      } else {
+    /* ================= WHEEL (desktop) ================= */
+    const handleWheel = (e) => {
+      const now = performance.now();
+      const isNewGesture = now - lastWheelRef.current > 150;
+      lastWheelRef.current = now;
+
+      // Firefox có thể trả deltaMode = 1 (đơn vị dòng)
+      const delta = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+
+      const freeStart = windowHeight * 2;
+      const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const y = window.scrollY;
+
+      /* ---- Vùng nội dung (từ màn 3 trở đi): tự cuộn ---- */
+      if (y >= freeStart - 100) {
         e.preventDefault();
+
+        // Cuộn xuống: xem nội dung
+        if (delta > 0) {
+          window.scrollTo({
+            top: Math.min(y + delta, maxScroll),
+            behavior: "instant",
+          });
+          return;
+        }
+
+        // Cuộn lên nhưng chưa tới đỉnh màn 3
+        if (y > freeStart + 5) {
+          window.scrollTo({
+            top: Math.max(y + delta, freeStart),
+            behavior: "instant",
+          });
+          return;
+        }
+
+        // Đã ở đỉnh màn 3 mà vẫn cuộn lên: quay về trang 2
+        if (!blockRef.current && isNewGesture) handleDirection("up");
+        return;
       }
+
+      /* ---- Màn 1 và 2: tự điều khiển chuyển trang ---- */
+      e.preventDefault();
+      if (blockRef.current) return;
+      if (Math.abs(delta) < 10) return;
+
+      handleDirection(delta > 0 ? "down" : "up");
     };
 
     window.addEventListener("touchstart", handleTouchStart, { passive: false });
     window.addEventListener("touchmove", handleTouchMove, { passive: false });
     window.addEventListener("touchend", handleTouchEnd, { passive: false });
+    window.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("touchend", handleTouchEnd);
+      window.removeEventListener("wheel", handleWheel);
+
+      // Dọn trạng thái dở dang để không bắn sau khi sang /chat
+      clearExistingTimeout();
+      clearTimeout(scrollTimerRef.current);
+      clearTimeout(audioTimerRef.current);
+      blockRef.current = false;
+      setBlockTouch(false);
     };
-  }, [windowHeight]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [windowHeight, enabled]);
 
   return null;
 };

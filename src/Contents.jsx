@@ -9,7 +9,7 @@ const Contents = () => {
 
 
   return (
-    <div className="relative  flex flex-col lg:hidden  bg-primary">
+    <div className="relative  flex flex-col  bg-primary">
       <div className={`absolute w-full h-[calc(var(--vh)*100)] z-10`}></div>
 
       <div id="checkid" className="h-[calc(var(--vh)*100)] w-full">

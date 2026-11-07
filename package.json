@@ -14,13 +14,16 @@
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@react-oauth/google": "^0.13.5",
     "@react-three/drei": "^9.114.3",
     "@react-three/fiber": "^8.11.1",
     "@use-gesture/react": "^10.3.1",
+    "axios": "^1.21.0",
     "firebase": "^10.5.2",
     "framer-motion": "^9.0.7",
     "gsap": "^3.12.5",
     "jotai": "^2.10.0",
+    "lucide-react": "^1.70.0",
     "maath": "^0.5.2",
     "mobile-detect": "^1.4.5",
     "react": "^18.2.0",
@@ -29,6 +32,7 @@
     "react-scroll": "^1.9.3",
     "react-swipeable": "^7.0.2",
     "react-vertical-timeline-component": "^3.6.0",
+    "socket.io-client": "^4.8.4",
     "styled-components": "^6.1.0",
     "three": "^0.169.0"
   },
@@ -39,6 +43,7 @@
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.6",
+    "typescript": "^7.0.2",
     "vite": "^4.1.0"
   }
 }

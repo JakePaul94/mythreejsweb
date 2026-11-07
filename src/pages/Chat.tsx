@@ -48,7 +48,7 @@ const Chat: React.FC = () => {
           onClick={() => navigate("/")}
           className="px-4 py-2 bg-blue-500 text-white rounded-lg"
         >
-          Quay lại trang chủ
+          Back to Home
         </button>
       </div>
     );
@@ -57,7 +57,7 @@ const Chat: React.FC = () => {
   if (!roomId) {
     return (
       <div className={`${fullScreen} text-slate-500`}>
-        Đang vào phòng chat...
+       Entering chat room...
       </div>
     );
   }
@@ -65,7 +65,7 @@ const Chat: React.FC = () => {
   return (
     <ChatScreen
       roomId={roomId}
-      roomName="Chat với Trình"
+      roomName="Chat with Trình"
       onLeave={() => navigate("/")}
     />
   );

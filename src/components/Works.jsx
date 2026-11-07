@@ -1,11 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
-
 import { styles } from "../styles";
 import { github } from "../assets";
 import { SectionWrapper } from "../hoc";
 import { projects } from "../constants";
 import { fadeIn, textVariant } from "../utils/motion";
+import Clickable from "./Clickable"; // 👉 Import Clickable
 
 const ProjectCard = ({
   index,
@@ -17,14 +17,13 @@ const ProjectCard = ({
 }) => {
   return (
     <motion.div
-      // Tự kích hoạt animation theo từng thẻ, không phụ thuộc vào section cha
       variants={fadeIn("up", "spring", (index % 3) * 0.2, 0.75)}
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount: 0.1 }}
       className="w-full sm:w-[360px] min-w-0"
     >
-      <div className="bg-[rgba(0,222,255,0.07)] shadow-2xl p-5 rounded-2xl w-full">
+      <div className="bg-[rgba(0,222,255,0.07)] shadow-2xl p-5 rounded-2xl w-full border border-white/5">
         <div className="relative w-full h-[200px]">
           <img
             src={image}
@@ -34,9 +33,10 @@ const ProjectCard = ({
 
           {source_code_link && (
             <div className="absolute inset-0 flex justify-end m-3 card-img_hover">
-              <div
-                onClick={() => window.open(source_code_link, "_blank")}
-                className="black-gradient w-10 h-10 rounded-full flex justify-center items-center cursor-pointer hover:scale-110 transition-all"
+              {/* 👉 DÙNG CLICKABLE CHO NÚT GITHUB */}
+              <Clickable
+                onClick={() => window.open(source_code_link, "_blank", "noopener,noreferrer")}
+                className="black-gradient w-10 h-10 rounded-full flex justify-center items-center shadow-md hover:scale-110 active:scale-95 transition-all"
                 title="View Source Code"
               >
                 <img
@@ -44,7 +44,7 @@ const ProjectCard = ({
                   alt="source code"
                   className="w-1/2 h-1/2 object-contain"
                 />
-              </div>
+              </Clickable>
             </div>
           )}
         </div>
@@ -61,14 +61,15 @@ const ProjectCard = ({
         {source_code_link && (
           <p className="mt-3 text-[13px] text-secondary truncate">
             Source:{" "}
-            <a
+            {/* 👉 DÙNG CLICKABLE CHO LINK TEXT */}
+            <Clickable
+              as="a"
               href={source_code_link}
               target="_blank"
-              rel="noreferrer"
-              className="text-blue-400 hover:underline"
+              className="text-cyan-400 hover:underline inline"
             >
               {source_code_link.replace(/^https?:\/\//, "")}
-            </a>
+            </Clickable>
           </p>
         )}
 

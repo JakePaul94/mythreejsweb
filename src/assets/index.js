@@ -1,4 +1,5 @@
 import logo from "./logo.png";
+import myavatar from "./myavatar.jpg"
 
 import github from "./github.png";
 import menu from "./menu.svg";

@@ -23,6 +23,7 @@ import {
   X,
 } from "lucide-react";
 
+import myavatar from "../assets/myavatar.jpg";
 import { useChat } from "../hooks/useChat";
 import { useAuth } from "../context/AuthContext";
 import { apiService } from "../services/api.service";
@@ -49,7 +50,7 @@ const COLORS = {
 };
 
 // ======================================================
-// RESPONSIVE CSS - CÙNG FILE
+// RESPONSIVE CSS
 // ======================================================
 
 const responsiveCSS = `
@@ -179,7 +180,7 @@ const responsiveCSS = `
 `;
 
 // ======================================================
-// STYLESHEET OBJECT
+// STYLES
 // ======================================================
 
 const styles: Record<string, CSSProperties> = {
@@ -599,7 +600,7 @@ const isSameDay = (a: Date, b: Date) =>
   a.getDate() === b.getDate();
 
 const formatTime = (date: Date) =>
-  date.toLocaleTimeString("vi-VN", {
+  date.toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -610,10 +611,14 @@ const dayLabel = (date: Date) => {
 
   yesterday.setDate(now.getDate() - 1);
 
-  if (isSameDay(date, now)) return "Hôm nay";
-  if (isSameDay(date, yesterday)) return "Hôm qua";
+  if (isSameDay(date, now)) return "Today";
+  if (isSameDay(date, yesterday)) return "Yesterday";
 
-  return date.toLocaleDateString("vi-VN");
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
 };
 
 const formatFileSize = (bytes?: number | null) => {
@@ -639,7 +644,7 @@ const sortMessages = (items: MessageDTO[]) =>
 
 const ChatScreen: React.FC<ChatProps> = ({
   roomId,
-  roomName = "Trịnh (Hỗ trợ)",
+  roomName = "Trinh (Support)",
   onLeave,
 }) => {
   const { user } = useAuth();
@@ -693,7 +698,7 @@ const ChatScreen: React.FC<ChatProps> = ({
       } catch (err) {
         if (!cancelled) {
           console.error("Load chat history:", err);
-          setError("Không thể tải lịch sử tin nhắn.");
+          setError("Unable to load message history.");
         }
       }
     };
@@ -735,12 +740,10 @@ const ChatScreen: React.FC<ChatProps> = ({
     if (!messages.length) return;
 
     const last = messages[messages.length - 1];
-
     const mine = !!user && last.sender?.id === user.id;
 
     if (firstScroll.current) {
       requestAnimationFrame(() => scrollToBottom());
-
       firstScroll.current = false;
       return;
     }
@@ -815,13 +818,12 @@ const ChatScreen: React.FC<ChatProps> = ({
 
     try {
       setIsUploading(true);
-
       await apiService.uploadMedia(roomId, file);
     } catch (err) {
       setError(
         err instanceof Error
           ? err.message
-          : "Không thể tải tệp lên."
+          : "Unable to upload file."
       );
     } finally {
       setIsUploading(false);
@@ -841,11 +843,7 @@ const ChatScreen: React.FC<ChatProps> = ({
     isMe: boolean
   ) => {
     if (message.content === "👍" && message.type === "text") {
-      return (
-        <div style={styles.likeMessage}>
-          👍
-        </div>
-      );
+      return <div style={styles.likeMessage}>👍</div>;
     }
 
     if (message.type === "image" && message.media?.url) {
@@ -858,7 +856,7 @@ const ChatScreen: React.FC<ChatProps> = ({
         >
           <img
             src={message.media.url}
-            alt={message.media.fileName || "Ảnh"}
+            alt={message.media.fileName || "Image"}
             loading="lazy"
             style={styles.image}
           />
@@ -880,7 +878,7 @@ const ChatScreen: React.FC<ChatProps> = ({
 
           <div style={styles.fileInfo}>
             <div style={styles.fileName}>
-              {message.media.fileName || "Tệp đính kèm"}
+              {message.media.fileName || "Attachment"}
             </div>
 
             <div style={styles.fileSize}>
@@ -919,11 +917,11 @@ const ChatScreen: React.FC<ChatProps> = ({
           </div>
 
           <div style={styles.emptyTitle}>
-            Chưa có tin nhắn
+            No messages yet
           </div>
 
           <div style={styles.emptyDescription}>
-            Gửi lời chào để bắt đầu trò chuyện nhé!
+            Say hello to start a conversation!
           </div>
         </div>
       );
@@ -1084,7 +1082,7 @@ const ChatScreen: React.FC<ChatProps> = ({
         <section
           className="zchat-window"
           style={styles.window}
-          aria-label="Cửa sổ trò chuyện"
+          aria-label="Chat window"
         >
           {/* HEADER */}
 
@@ -1097,14 +1095,14 @@ const ChatScreen: React.FC<ChatProps> = ({
               className="zchat-icon-btn"
               style={styles.iconButton}
               onClick={onLeave}
-              aria-label="Quay lại"
+              aria-label="Go back"
             >
               <ArrowLeft size={23} />
             </button>
 
             <div style={styles.avatarWrapper}>
               <img
-                src="https://api.dicebear.com/7.x/bottts/svg?seed=Trinh"
+                src={myavatar}
                 alt="Avatar"
                 style={styles.avatar}
               />
@@ -1134,9 +1132,7 @@ const ChatScreen: React.FC<ChatProps> = ({
                   }}
                 />
 
-                {isConnected
-                  ? "Đang hoạt động"
-                  : "Đang kết nối..."}
+                {isConnected ? "Online" : "Connecting..."}
               </div>
             </div>
 
@@ -1144,7 +1140,7 @@ const ChatScreen: React.FC<ChatProps> = ({
               type="button"
               className="zchat-icon-btn"
               style={styles.iconButton}
-              aria-label="Tùy chọn"
+              aria-label="Options"
             >
               <MoreVertical size={22} />
             </button>
@@ -1154,7 +1150,7 @@ const ChatScreen: React.FC<ChatProps> = ({
               className="zchat-icon-btn zchat-close"
               style={styles.iconButton}
               onClick={onLeave}
-              aria-label="Đóng chat"
+              aria-label="Close chat"
             >
               <X size={21} />
             </button>
@@ -1186,6 +1182,7 @@ const ChatScreen: React.FC<ChatProps> = ({
                   color: "#b91c1c",
                   cursor: "pointer",
                 }}
+                aria-label="Dismiss error"
               >
                 <X size={15} />
               </button>
@@ -1212,7 +1209,7 @@ const ChatScreen: React.FC<ChatProps> = ({
                 style={styles.toolButton}
                 onClick={() => pickFile("image/*")}
                 disabled={!isConnected || isUploading}
-                aria-label="Gửi ảnh"
+                aria-label="Send image"
               >
                 {isUploading ? (
                   <Loader2
@@ -1230,18 +1227,13 @@ const ChatScreen: React.FC<ChatProps> = ({
                 style={styles.toolButton}
                 onClick={() => pickFile("*/*")}
                 disabled={!isConnected || isUploading}
-                aria-label="Đính kèm tệp"
+                aria-label="Attach file"
               >
                 <Paperclip size={22} />
               </button>
             </div>
 
-            <div
-              style={styles.inputWrapper}
-              onFocus={() => {
-                // Focus styling
-              }}
-            >
+            <div style={styles.inputWrapper}>
               <textarea
                 ref={inputRef}
                 rows={1}
@@ -1251,8 +1243,8 @@ const ChatScreen: React.FC<ChatProps> = ({
                 disabled={!isConnected || isUploading}
                 placeholder={
                   isUploading
-                    ? "Đang tải tệp lên..."
-                    : "Nhập tin nhắn..."
+                    ? "Uploading file..."
+                    : "Type a message..."
                 }
                 style={styles.textarea}
               />
@@ -1281,7 +1273,7 @@ const ChatScreen: React.FC<ChatProps> = ({
                 }}
                 onClick={handleSend}
                 disabled={!isConnected || isUploading}
-                aria-label="Gửi"
+                aria-label="Send message"
               >
                 <Send size={19} />
               </button>
@@ -1299,7 +1291,7 @@ const ChatScreen: React.FC<ChatProps> = ({
                   }
                 }}
                 disabled={!isConnected || isUploading}
-                aria-label="Thả like"
+                aria-label="Like"
               >
                 <ThumbsUp size={23} />
               </button>

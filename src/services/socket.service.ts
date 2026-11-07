@@ -5,13 +5,18 @@ class SocketService {
   public socket: Socket | null = null;
 
   connect = (url: string) => {
-    if (this.socket?.connected) return;
+  if (this.socket?.connected) return;
 
-    this.socket = io(url, {
-      withCredentials: true, // Bắt buộc để gửi cookie session lên Server
-      transports: ["websocket", "polling"],
-    });
-  };
+  const token = localStorage.getItem("token");
+
+  this.socket = io(url, {
+    withCredentials: true,
+    auth: {
+      token: token, // 👉 Truyền token vào auth của Socket
+    },
+    transports: ["websocket", "polling"],
+  });
+};
 
   disconnect = () => {
     if (this.socket) {

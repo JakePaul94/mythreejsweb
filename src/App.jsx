@@ -124,7 +124,7 @@ const App = () => {
           />
         </Routes>
 
-        {/* <ChatButtonWrapper isLoaded={isLoaded} /> */}
+        <ChatButtonWrapper isLoaded={isLoaded} />
       </AuthProvider>
     </GoogleOAuthProvider>
   );

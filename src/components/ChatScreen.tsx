@@ -1,4 +1,3 @@
-
 import React, {
   useState,
   useEffect,
@@ -6,20 +5,17 @@ import React, {
   useCallback,
   type CSSProperties,
 } from "react";
-
 import { createPortal } from "react-dom";
-
 import {
   ArrowLeft,
-  Send,
+  ArrowUp,
   Smile,
-  Paperclip,
+  Plus,
   Image as ImageIcon,
   ThumbsUp,
   FileText,
   Download,
   Loader2,
-  MoreVertical,
   X,
 } from "lucide-react";
 
@@ -38,20 +34,15 @@ import type { MessageDTO } from "../type/type";
 const GROUP_GAP_MS = 5 * 60 * 1000;
 
 const COLORS = {
-  primary: "#0878f9",
-  primaryDark: "#0068e8",
-  background: "#f0f2f5",
-  mine: "#dceaff",
+  primary: "#0b57d0",
+  background: "#f8fafd",
+  mine: "#d3e3fd",
   theirs: "#ffffff",
-  text: "#1e293b",
-  secondary: "#94a3b8",
-  border: "#e8edf3",
+  text: "#1f1f1f",
+  secondary: "#747775",
+  border: "#e3e3e3",
   success: "#22c55e",
 };
-
-// ======================================================
-// RESPONSIVE CSS
-// ======================================================
 
 const responsiveCSS = `
 .zchat-overlay,
@@ -61,16 +52,18 @@ const responsiveCSS = `
 
 .zchat-overlay {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .zchat-messages {
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
   overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .zchat-messages::-webkit-scrollbar {
-  width: 5px;
+  width: 4px;
 }
 
 .zchat-messages::-webkit-scrollbar-thumb {
@@ -78,33 +71,12 @@ const responsiveCSS = `
   border-radius: 10px;
 }
 
-.zchat-icon-btn,
-.zchat-tool-btn,
-.zchat-send-btn,
-.zchat-like-btn,
-.zchat-emoji-btn {
-  transition: background .2s, color .2s, transform .15s;
+.zchat-btn {
+  transition: background .15s, transform .12s;
 }
 
-.zchat-icon-btn:hover {
-  background: rgba(255,255,255,.16) !important;
-}
-
-.zchat-tool-btn:hover,
-.zchat-like-btn:hover,
-.zchat-emoji-btn:hover {
-  background: #f1f5f9 !important;
-}
-
-.zchat-send-btn:hover {
-  background: #0866df !important;
-}
-
-.zchat-icon-btn:active,
-.zchat-tool-btn:active,
-.zchat-send-btn:active,
-.zchat-like-btn:active {
-  transform: scale(.93);
+.zchat-btn:active {
+  transform: scale(.92);
 }
 
 .zchat-loading {
@@ -115,480 +87,25 @@ const responsiveCSS = `
   to { transform: rotate(360deg); }
 }
 
-/* Mobile */
-
 @media screen and (max-width: 600px) {
   .zchat-overlay {
     padding: 0 !important;
-    background: #fff !important;
+    background: #f8fafd !important;
   }
 
   .zchat-window {
     width: 100% !important;
     max-width: none !important;
     height: 100% !important;
-    height: 100dvh !important;
-    min-height: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-  }
-
-  .zchat-header {
-    height: 60px !important;
-    min-height: 60px !important;
-    padding-left: 8px !important;
-    padding-right: 10px !important;
   }
 
   .zchat-close {
     display: none !important;
   }
-
-  .zchat-messages {
-    padding: 14px 10px !important;
-  }
-
-  .zchat-composer {
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-    padding-bottom: max(8px, env(safe-area-inset-bottom)) !important;
-  }
-
-  .zchat-message-column {
-    max-width: 82% !important;
-  }
-}
-
-@media screen and (max-width: 360px) {
-  .zchat-header {
-    gap: 5px !important;
-  }
-
-  .zchat-tool-btn {
-    width: 31px !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .zchat-overlay *,
-  .zchat-overlay *::before,
-  .zchat-overlay *::after {
-    animation-duration: .01ms !important;
-    transition-duration: .01ms !important;
-  }
 }
 `;
-
-// ======================================================
-// STYLES
-// ======================================================
-
-const styles: Record<string, CSSProperties> = {
-  overlay: {
-    position: "fixed",
-    inset: 0,
-    zIndex: 999999,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-    background: "rgba(15, 23, 42, .45)",
-    fontFamily:
-      'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  },
-
-  window: {
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    maxWidth: 460,
-    height: "min(760px, 100%)",
-    minHeight: 0,
-    overflow: "hidden",
-    background: "#fff",
-    borderRadius: 18,
-    boxShadow: "0 20px 60px rgba(0,0,0,.18)",
-  },
-
-  header: {
-    display: "flex",
-    alignItems: "center",
-    flexShrink: 0,
-    height: 68,
-    minHeight: 68,
-    padding: "0 14px",
-    gap: 11,
-    color: "#fff",
-    background: "linear-gradient(120deg, #0068ff, #1685ff)",
-    zIndex: 2,
-  },
-
-  iconButton: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 38,
-    height: 38,
-    flexShrink: 0,
-    padding: 0,
-    border: 0,
-    borderRadius: "50%",
-    color: "#fff",
-    background: "transparent",
-    cursor: "pointer",
-  },
-
-  avatarWrapper: {
-    position: "relative",
-    width: 42,
-    height: 42,
-    flexShrink: 0,
-  },
-
-  avatar: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    borderRadius: "50%",
-    background: "#fff",
-  },
-
-  onlineIndicator: {
-    position: "absolute",
-    right: -1,
-    bottom: -1,
-    width: 13,
-    height: 13,
-    borderRadius: "50%",
-    border: "2px solid #1685ff",
-  },
-
-  headerInfo: {
-    flex: 1,
-    minWidth: 0,
-  },
-
-  headerName: {
-    overflow: "hidden",
-    fontSize: 15,
-    fontWeight: 650,
-    lineHeight: 1.4,
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-  },
-
-  headerStatus: {
-    display: "flex",
-    alignItems: "center",
-    gap: 6,
-    marginTop: 2,
-    fontSize: 11,
-    color: "rgba(255,255,255,.85)",
-  },
-
-  statusDot: {
-    width: 7,
-    height: 7,
-    borderRadius: "50%",
-    flexShrink: 0,
-  },
-
-  messages: {
-    display: "flex",
-    flexDirection: "column",
-    flex: "1 1 0",
-    minHeight: 0,
-    width: "100%",
-    overflowX: "hidden",
-    overflowY: "auto",
-    padding: 18,
-    background: COLORS.background,
-  },
-
-  empty: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-    minHeight: 220,
-    textAlign: "center",
-    color: "#64748b",
-  },
-
-  emptyIcon: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 68,
-    height: 68,
-    marginBottom: 16,
-    borderRadius: "50%",
-    color: COLORS.primary,
-    background: "#fff",
-    boxShadow: "0 3px 12px rgba(0,0,0,.06)",
-  },
-
-  emptyTitle: {
-    fontSize: 14,
-    fontWeight: 650,
-    color: "#334155",
-  },
-
-  emptyDescription: {
-    marginTop: 5,
-    fontSize: 12,
-    color: "#8492a6",
-  },
-
-  dayDivider: {
-    display: "flex",
-    justifyContent: "center",
-    margin: "12px 0 18px",
-  },
-
-  dayLabel: {
-    padding: "5px 12px",
-    borderRadius: 20,
-    color: "#fff",
-    background: "rgba(100,116,139,.65)",
-    fontSize: 10.5,
-  },
-
-  messageRow: {
-    display: "flex",
-    alignItems: "flex-end",
-    gap: 8,
-    width: "100%",
-    marginTop: 12,
-  },
-
-  messageAvatar: {
-    display: "flex",
-    alignItems: "flex-end",
-    justifyContent: "center",
-    width: 28,
-    height: 28,
-    flexShrink: 0,
-  },
-
-  messageColumn: {
-    display: "flex",
-    flexDirection: "column",
-    maxWidth: "78%",
-    minWidth: 0,
-  },
-
-  messageContent: {
-    maxWidth: "100%",
-    minWidth: 0,
-    overflow: "hidden",
-  },
-
-  bubble: {
-    padding: "10px 13px",
-    borderRadius: 18,
-    fontSize: 14,
-    lineHeight: 1.45,
-    whiteSpace: "pre-wrap",
-    overflowWrap: "anywhere",
-    boxShadow: "0 1px 2px rgba(0,0,0,.06)",
-  },
-
-  time: {
-    marginTop: 4,
-    padding: "0 4px",
-    color: "#94a3b8",
-    fontSize: 10,
-  },
-
-  imageLink: {
-    display: "block",
-    maxWidth: 260,
-    overflow: "hidden",
-    borderRadius: 13,
-  },
-
-  image: {
-    display: "block",
-    maxWidth: "100%",
-    maxHeight: 340,
-    width: "auto",
-    objectFit: "cover",
-    borderRadius: 13,
-  },
-
-  fileCard: {
-    display: "flex",
-    alignItems: "center",
-    width: 240,
-    maxWidth: "100%",
-    gap: 10,
-    padding: 12,
-    borderRadius: 13,
-    color: "#334155",
-    background: "#fff",
-    textDecoration: "none",
-    boxShadow: "0 1px 3px rgba(0,0,0,.07)",
-  },
-
-  fileIcon: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 42,
-    height: 42,
-    flexShrink: 0,
-    borderRadius: 10,
-    color: COLORS.primary,
-    background: "#e8f1ff",
-  },
-
-  fileInfo: {
-    flex: 1,
-    minWidth: 0,
-  },
-
-  fileName: {
-    overflow: "hidden",
-    fontSize: 12,
-    fontWeight: 600,
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-  },
-
-  fileSize: {
-    marginTop: 4,
-    color: "#94a3b8",
-    fontSize: 10,
-  },
-
-  error: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 10,
-    padding: "9px 14px",
-    color: "#b91c1c",
-    background: "#fef2f2",
-    borderTop: "1px solid #fecaca",
-    fontSize: 12,
-  },
-
-  composer: {
-    display: "flex",
-    alignItems: "flex-end",
-    flexShrink: 0,
-    width: "100%",
-    gap: 5,
-    padding: "10px 12px",
-    paddingBottom: "max(10px, env(safe-area-inset-bottom))",
-    borderTop: `1px solid ${COLORS.border}`,
-    background: "#fff",
-  },
-
-  hiddenInput: {
-    display: "none",
-  },
-
-  composerActions: {
-    display: "flex",
-    alignItems: "center",
-    gap: 1,
-    flexShrink: 0,
-  },
-
-  toolButton: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 38,
-    height: 40,
-    flexShrink: 0,
-    border: 0,
-    borderRadius: "50%",
-    color: COLORS.primary,
-    background: "transparent",
-    cursor: "pointer",
-  },
-
-  inputWrapper: {
-    display: "flex",
-    alignItems: "flex-end",
-    flex: 1,
-    minWidth: 0,
-    padding: "5px 10px",
-    border: "1px solid transparent",
-    borderRadius: 20,
-    background: "#f0f2f5",
-  },
-
-  textarea: {
-    display: "block",
-    flex: 1,
-    minWidth: 0,
-    minHeight: 30,
-    maxHeight: 120,
-    padding: "5px 2px",
-    resize: "none",
-    border: 0,
-    outline: "none",
-    color: COLORS.text,
-    background: "transparent",
-    fontFamily: "inherit",
-    fontSize: 14,
-    lineHeight: "20px",
-    overflowY: "auto",
-  },
-
-  emojiButton: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 29,
-    height: 30,
-    flexShrink: 0,
-    border: 0,
-    color: "#94a3b8",
-    background: "transparent",
-    cursor: "pointer",
-  },
-
-  sendButton: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 40,
-    height: 40,
-    flexShrink: 0,
-    border: 0,
-    borderRadius: "50%",
-    color: "#fff",
-    background: COLORS.primary,
-    cursor: "pointer",
-  },
-
-  likeButton: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: 40,
-    height: 40,
-    flexShrink: 0,
-    border: 0,
-    borderRadius: "50%",
-    color: COLORS.primary,
-    background: "transparent",
-    cursor: "pointer",
-  },
-
-  likeMessage: {
-    padding: "2px 5px",
-    fontSize: 37,
-    lineHeight: 1.3,
-    userSelect: "none",
-  },
-};
 
 // ======================================================
 // UTILITIES
@@ -608,24 +125,21 @@ const formatTime = (date: Date) =>
 const dayLabel = (date: Date) => {
   const now = new Date();
   const yesterday = new Date();
-
   yesterday.setDate(now.getDate() - 1);
 
-  if (isSameDay(date, now)) return "Today";
-  if (isSameDay(date, yesterday)) return "Yesterday";
+  if (isSameDay(date, now)) return "Hôm nay";
+  if (isSameDay(date, yesterday)) return "Hôm qua";
 
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
+  return date.toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
     year: "numeric",
   });
 };
 
 const formatFileSize = (bytes?: number | null) => {
   if (!bytes) return "";
-
   const kb = bytes / 1024;
-
   return kb >= 1024
     ? `${(kb / 1024).toFixed(1)} MB`
     : `${Math.max(1, Math.round(kb))} KB`;
@@ -633,9 +147,7 @@ const formatFileSize = (bytes?: number | null) => {
 
 const sortMessages = (items: MessageDTO[]) =>
   [...items].sort(
-    (a, b) =>
-      new Date(a.createdAt).getTime() -
-      new Date(b.createdAt).getTime()
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
 
 // ======================================================
@@ -644,7 +156,7 @@ const sortMessages = (items: MessageDTO[]) =>
 
 const ChatScreen: React.FC<ChatProps> = ({
   roomId,
-  roomName = "Trinh (Support)",
+  roomName = "Trịnh DC",
   onLeave,
 }) => {
   const { user } = useAuth();
@@ -653,6 +165,15 @@ const ChatScreen: React.FC<ChatProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
 
+  // State lưu kích thước thật của VisualViewport khi bàn phím ảo đóng/mở
+  const [viewportStyle, setViewportStyle] = useState<{
+    height: string | number;
+    top: number;
+  }>({
+    height: "100%",
+    top: 0,
+  });
+
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -660,14 +181,52 @@ const ChatScreen: React.FC<ChatProps> = ({
   const stickToBottom = useRef(true);
   const firstScroll = useRef(true);
 
-  const {
-    messages,
-    setMessages,
-    sendMessage,
-    connectionStatus,
-  } = useChat(roomId, true);
+  const { messages, setMessages, sendMessage, connectionStatus } = useChat(
+    roomId,
+    true
+  );
 
   const isConnected = connectionStatus === "connected";
+
+  // ----------------------------------------------------
+  // FIX BÀN PHÍM ẢO TRÊN MOBILE (VISUAL VIEWPORT)
+  // ----------------------------------------------------
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const handleViewportChange = () => {
+      setViewportStyle({
+        height: vv.height,
+        top: vv.offsetTop,
+      });
+
+      // Nếu đang ở cuối trang, tự cuộn xuống khi bàn phím đẩy lên
+      if (stickToBottom.current) {
+        requestAnimationFrame(() => {
+          if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+          }
+        });
+      }
+    };
+
+    handleViewportChange();
+
+    vv.addEventListener("resize", handleViewportChange);
+    vv.addEventListener("scroll", handleViewportChange);
+
+    // Chặn body scroll khi đang mở chat
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      vv.removeEventListener("resize", handleViewportChange);
+      vv.removeEventListener("scroll", handleViewportChange);
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
 
   // ----------------------------------------------------
   // LOAD HISTORY
@@ -675,36 +234,29 @@ const ChatScreen: React.FC<ChatProps> = ({
 
   useEffect(() => {
     if (!roomId) return;
-
     let cancelled = false;
 
     const loadHistory = async () => {
       try {
         const history = await apiService.getMessages(roomId);
-
         if (cancelled) return;
 
         setMessages((prev) => {
           const map = new Map<string, MessageDTO>();
-
-          [...history, ...prev].forEach((message) => {
-            if (message.id) {
-              map.set(message.id, message);
-            }
+          [...history, ...prev].forEach((m) => {
+            if (m.id) map.set(m.id, m);
           });
-
           return sortMessages(Array.from(map.values()));
         });
       } catch (err) {
         if (!cancelled) {
           console.error("Load chat history:", err);
-          setError("Unable to load message history.");
+          setError("Không thể tải lịch sử tin nhắn.");
         }
       }
     };
 
     loadHistory();
-
     return () => {
       cancelled = true;
     };
@@ -717,7 +269,6 @@ const ChatScreen: React.FC<ChatProps> = ({
   const scrollToBottom = useCallback((smooth = false) => {
     const element = listRef.current;
     if (!element) return;
-
     element.scrollTo({
       top: element.scrollHeight,
       behavior: smooth ? "smooth" : "auto",
@@ -727,18 +278,13 @@ const ChatScreen: React.FC<ChatProps> = ({
   const handleScroll = useCallback(() => {
     const element = listRef.current;
     if (!element) return;
-
     const distance =
-      element.scrollHeight -
-      element.scrollTop -
-      element.clientHeight;
-
+      element.scrollHeight - element.scrollTop - element.clientHeight;
     stickToBottom.current = distance < 120;
   }, []);
 
   useEffect(() => {
     if (!messages.length) return;
-
     const last = messages[messages.length - 1];
     const mine = !!user && last.sender?.id === user.id;
 
@@ -754,15 +300,14 @@ const ChatScreen: React.FC<ChatProps> = ({
   }, [messages, user, scrollToBottom]);
 
   // ----------------------------------------------------
-  // TEXTAREA
+  // TEXTAREA RESIZE
   // ----------------------------------------------------
 
   const resizeInput = useCallback(() => {
     const element = inputRef.current;
     if (!element) return;
-
     element.style.height = "auto";
-    element.style.height = `${Math.min(element.scrollHeight, 120)}px`;
+    element.style.height = `${Math.min(element.scrollHeight, 110)}px`;
   }, []);
 
   useEffect(() => {
@@ -770,39 +315,33 @@ const ChatScreen: React.FC<ChatProps> = ({
   }, [text, resizeInput]);
 
   // ----------------------------------------------------
-  // SEND MESSAGE
+  // SEND & UPLOAD
   // ----------------------------------------------------
 
   const handleSend = useCallback(() => {
     const content = text.trim();
-
     if (!content || !isConnected || isUploading) return;
 
     sendMessage(content);
     setText("");
 
     requestAnimationFrame(() => {
-      resizeInput();
-      inputRef.current?.focus();
+      if (inputRef.current) {
+        inputRef.current.style.height = "auto";
+        inputRef.current.focus();
+      }
     });
-  }, [text, isConnected, isUploading, sendMessage, resizeInput]);
+  }, [text, isConnected, isUploading, sendMessage]);
 
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLTextAreaElement>
-  ) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       handleSend();
     }
   };
 
-  // ----------------------------------------------------
-  // UPLOAD
-  // ----------------------------------------------------
-
   const pickFile = (accept: string) => {
     if (!fileRef.current || !isConnected || isUploading) return;
-
     fileRef.current.accept = accept;
     fileRef.current.click();
   };
@@ -811,39 +350,31 @@ const ChatScreen: React.FC<ChatProps> = ({
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
-
     if (!file || !roomId) return;
 
     setError("");
-
     try {
       setIsUploading(true);
       await apiService.uploadMedia(roomId, file);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Unable to upload file."
-      );
+      setError(err instanceof Error ? err.message : "Lỗi tải tệp lên.");
     } finally {
       setIsUploading(false);
-
-      if (fileRef.current) {
-        fileRef.current.value = "";
-      }
+      if (fileRef.current) fileRef.current.value = "";
     }
   };
 
   // ----------------------------------------------------
-  // RENDER MESSAGE BODY
+  // RENDER MESSAGES
   // ----------------------------------------------------
 
-  const renderBody = (
-    message: MessageDTO,
-    isMe: boolean
-  ) => {
+  const renderBody = (message: MessageDTO, isMe: boolean) => {
     if (message.content === "👍" && message.type === "text") {
-      return <div style={styles.likeMessage}>👍</div>;
+      return (
+        <div style={{ fontSize: 36, lineHeight: 1.2, userSelect: "none" }}>
+          👍
+        </div>
+      );
     }
 
     if (message.type === "image" && message.media?.url) {
@@ -852,13 +383,23 @@ const ChatScreen: React.FC<ChatProps> = ({
           href={message.media.url}
           target="_blank"
           rel="noreferrer"
-          style={styles.imageLink}
+          style={{
+            display: "block",
+            maxWidth: 250,
+            borderRadius: 16,
+            overflow: "hidden",
+          }}
         >
           <img
             src={message.media.url}
             alt={message.media.fileName || "Image"}
             loading="lazy"
-            style={styles.image}
+            style={{
+              display: "block",
+              maxWidth: "100%",
+              maxHeight: 320,
+              objectFit: "cover",
+            }}
           />
         </a>
       );
@@ -870,23 +411,50 @@ const ChatScreen: React.FC<ChatProps> = ({
           href={message.media.url}
           target="_blank"
           rel="noreferrer"
-          style={styles.fileCard}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            padding: "10px 14px",
+            borderRadius: 16,
+            background: "#fff",
+            color: "#1f2937",
+            textDecoration: "none",
+            boxShadow: "0 1px 3px rgba(0,0,0,.08)",
+          }}
         >
-          <div style={styles.fileIcon}>
-            <FileText size={23} />
+          <div
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 10,
+              background: "#e8f0fe",
+              color: COLORS.primary,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <FileText size={20} />
           </div>
-
-          <div style={styles.fileInfo}>
-            <div style={styles.fileName}>
-              {message.media.fileName || "Attachment"}
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {message.media.fileName || "Tệp đính kèm"}
             </div>
-
-            <div style={styles.fileSize}>
+            <div style={{ fontSize: 11, color: "#64748b", marginTop: 2 }}>
               {formatFileSize(message.media.size)}
             </div>
           </div>
-
-          <Download size={18} color="#94a3b8" />
+          <Download size={17} color="#64748b" />
         </a>
       );
     }
@@ -894,9 +462,15 @@ const ChatScreen: React.FC<ChatProps> = ({
     return (
       <div
         style={{
-          ...styles.bubble,
-          color: isMe ? "#172b4d" : "#1f2937",
+          padding: "10px 15px",
+          borderRadius: 20,
+          fontSize: 14.5,
+          lineHeight: 1.45,
+          whiteSpace: "pre-wrap",
+          overflowWrap: "anywhere",
+          color: "#1f1f1f",
           background: isMe ? COLORS.mine : COLORS.theirs,
+          boxShadow: isMe ? "none" : "0 1px 2px rgba(0,0,0,.05)",
         }}
       >
         {message.content}
@@ -904,24 +478,38 @@ const ChatScreen: React.FC<ChatProps> = ({
     );
   };
 
-  // ----------------------------------------------------
-  // RENDER MESSAGES
-  // ----------------------------------------------------
-
   const renderMessages = () => {
     if (messages.length === 0) {
       return (
-        <div style={styles.empty}>
-          <div style={styles.emptyIcon}>
-            <Smile size={36} />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 1,
+            textAlign: "center",
+            color: "#64748b",
+            padding: 24,
+          }}
+        >
+          <img
+            src={myavatar}
+            alt="Avatar"
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: "50%",
+              objectFit: "cover",
+              marginBottom: 12,
+              boxShadow: "0 4px 14px rgba(0,0,0,.1)",
+            }}
+          />
+          <div style={{ fontSize: 16, fontWeight: 600, color: "#1e293b" }}>
+            Trò chuyện trực tiếp với {roomName}
           </div>
-
-          <div style={styles.emptyTitle}>
-            No messages yet
-          </div>
-
-          <div style={styles.emptyDescription}>
-            Say hello to start a conversation!
+          <div style={{ fontSize: 13, color: "#64748b", marginTop: 4 }}>
+            Hãy để lại lời nhắn bên dưới nhé!
           </div>
         </div>
       );
@@ -953,34 +541,29 @@ const ChatScreen: React.FC<ChatProps> = ({
         isSameDay(nextDate, date) &&
         nextDate.getTime() - date.getTime() < GROUP_GAP_MS;
 
-      const showDay =
-        !prevDate || !isSameDay(prevDate, date);
-
+      const showDay = !prevDate || !isSameDay(prevDate, date);
       const isLast = !sameAsNext;
-
-      const bubbleStyle: CSSProperties = {
-        ...styles.bubble,
-        color: isMe ? "#172b4d" : "#1f2937",
-        background: isMe ? COLORS.mine : COLORS.theirs,
-
-        borderTopLeftRadius:
-          !isMe && sameAsPrev ? 6 : 18,
-
-        borderTopRightRadius:
-          isMe && sameAsPrev ? 6 : 18,
-
-        borderBottomLeftRadius:
-          !isMe && sameAsNext ? 6 : 18,
-
-        borderBottomRightRadius:
-          isMe && sameAsNext ? 6 : 18,
-      };
 
       return (
         <React.Fragment key={message.id || index}>
           {showDay && (
-            <div style={styles.dayDivider}>
-              <span style={styles.dayLabel}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "14px 0",
+              }}
+            >
+              <span
+                style={{
+                  padding: "4px 12px",
+                  borderRadius: 999,
+                  fontSize: 11,
+                  color: "#475569",
+                  background: "#e2e8f0",
+                  fontWeight: 500,
+                }}
+              >
                 {dayLabel(date)}
               </span>
             </div>
@@ -988,73 +571,48 @@ const ChatScreen: React.FC<ChatProps> = ({
 
           <div
             style={{
-              ...styles.messageRow,
+              display: "flex",
+              alignItems: "flex-end",
+              gap: 8,
               justifyContent: isMe ? "flex-end" : "flex-start",
-              marginTop: sameAsPrev ? 3 : 12,
+              marginTop: sameAsPrev ? 3 : 10,
             }}
           >
             {!isMe && (
-              <div style={styles.messageAvatar}>
+              <div style={{ width: 28, height: 28, flexShrink: 0 }}>
                 {isLast && (
-                  message.sender?.picture ? (
-                    <img
-                      src={message.sender.picture}
-                      alt=""
-                      referrerPolicy="no-referrer"
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        width: 28,
-                        height: 28,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderRadius: "50%",
-                        background: COLORS.primary,
-                        color: "#fff",
-                        fontSize: 11,
-                        fontWeight: 700,
-                      }}
-                    >
-                      {message.sender?.name?.charAt(0) || "T"}
-                    </div>
-                  )
+                  <img
+                    src={myavatar}
+                    alt=""
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  />
                 )}
               </div>
             )}
 
             <div
-              className="zchat-message-column"
               style={{
-                ...styles.messageColumn,
+                display: "flex",
+                flexDirection: "column",
+                maxWidth: "78%",
                 alignItems: isMe ? "flex-end" : "flex-start",
               }}
             >
-              <div
-                style={{
-                  ...styles.messageContent,
-                  borderRadius: 18,
-                }}
-              >
-                {message.type === "text" &&
-                message.content !== "👍" ? (
-                  <div style={bubbleStyle}>
-                    {message.content}
-                  </div>
-                ) : (
-                  renderBody(message, isMe)
-                )}
-              </div>
-
+              {renderBody(message, isMe)}
               {isLast && (
-                <span style={styles.time}>
+                <span
+                  style={{
+                    fontSize: 10,
+                    color: "#94a3b8",
+                    marginTop: 3,
+                    padding: "0 4px",
+                  }}
+                >
                   {formatTime(date)}
                 </span>
               )}
@@ -1065,237 +623,373 @@ const ChatScreen: React.FC<ChatProps> = ({
     });
   };
 
-  // ----------------------------------------------------
-  // PORTAL
-  // ----------------------------------------------------
-
   if (typeof document === "undefined") return null;
 
   const content = (
     <>
       <style>{responsiveCSS}</style>
 
+      {/* OVERLAY BÁM THEO VISUAL VIEWPORT - KHÔNG BỊ KHOẢNG ĐEN BÀN PHÍM */}
       <div
         className="zchat-overlay"
-        style={styles.overlay}
+        style={{
+          position: "fixed",
+          left: 0,
+          right: 0,
+          top: viewportStyle.top,
+          height: viewportStyle.height,
+          zIndex: 999999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 16,
+          background: "rgba(15, 23, 42, .45)",
+          fontFamily:
+            'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        }}
       >
         <section
           className="zchat-window"
-          style={styles.window}
-          aria-label="Chat window"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            maxWidth: 460,
+            height: "min(760px, 100%)",
+            background: COLORS.background,
+            borderRadius: 24,
+            overflow: "hidden",
+            boxShadow: "0 20px 60px rgba(0,0,0,.18)",
+          }}
         >
-          {/* HEADER */}
-
+          {/* 1. HEADER THANH LỊCH KIỂU GOOGLE */}
           <header
-            className="zchat-header"
-            style={styles.header}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              height: 60,
+              minHeight: 60,
+              padding: "0 12px",
+              gap: 10,
+              background: "#ffffff",
+              borderBottom: "1px solid #e2e8f0",
+              flexShrink: 0,
+              zIndex: 10,
+            }}
           >
             <button
               type="button"
-              className="zchat-icon-btn"
-              style={styles.iconButton}
+              className="zchat-btn"
               onClick={onLeave}
-              aria-label="Go back"
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: "50%",
+                border: 0,
+                background: "transparent",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#1f1f1f",
+                cursor: "pointer",
+              }}
+              aria-label="Quay lại"
             >
-              <ArrowLeft size={23} />
+              <ArrowLeft size={22} />
             </button>
 
-            <div style={styles.avatarWrapper}>
+            <div style={{ position: "relative", width: 38, height: 38 }}>
               <img
                 src={myavatar}
                 alt="Avatar"
-                style={styles.avatar}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
               />
-
               <span
                 style={{
-                  ...styles.onlineIndicator,
-                  background: isConnected
-                    ? COLORS.success
-                    : "#cbd5e1",
+                  position: "absolute",
+                  right: 0,
+                  bottom: 0,
+                  width: 11,
+                  height: 11,
+                  borderRadius: "50%",
+                  background: isConnected ? COLORS.success : "#cbd5e1",
+                  border: "2px solid #fff",
                 }}
               />
             </div>
 
-            <div style={styles.headerInfo}>
-              <div style={styles.headerName}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div
+                style={{
+                  fontSize: 15,
+                  fontWeight: 600,
+                  color: "#1f1f1f",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
                 {roomName}
               </div>
-
-              <div style={styles.headerStatus}>
-                <span
-                  style={{
-                    ...styles.statusDot,
-                    background: isConnected
-                      ? "#4ade80"
-                      : "#cbd5e1",
-                  }}
-                />
-
-                {isConnected ? "Online" : "Connecting..."}
+              <div style={{ fontSize: 11.5, color: "#64748b" }}>
+                {isConnected ? "Đang hoạt động" : "Đang kết nối..."}
               </div>
             </div>
 
             <button
               type="button"
-              className="zchat-icon-btn"
-              style={styles.iconButton}
-              aria-label="Options"
-            >
-              <MoreVertical size={22} />
-            </button>
-
-            <button
-              type="button"
-              className="zchat-icon-btn zchat-close"
-              style={styles.iconButton}
+              className="zchat-btn zchat-close"
               onClick={onLeave}
-              aria-label="Close chat"
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: "50%",
+                border: 0,
+                background: "transparent",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#64748b",
+                cursor: "pointer",
+              }}
             >
-              <X size={21} />
+              <X size={20} />
             </button>
           </header>
 
-          {/* MESSAGE LIST */}
-
+          {/* 2. DANH SÁCH TIN NHẮN */}
           <main
             className="zchat-messages"
             ref={listRef}
             onScroll={handleScroll}
-            style={styles.messages}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              flex: "1 1 0",
+              minHeight: 0,
+              overflowY: "auto",
+              padding: "16px 14px 8px",
+            }}
           >
             {renderMessages()}
           </main>
 
-          {/* ERROR */}
-
+          {/* THÔNG BÁO LỖI NẾU CÓ */}
           {error && (
-            <div style={styles.error}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "8px 14px",
+                background: "#fef2f2",
+                color: "#b91c1c",
+                fontSize: 12,
+              }}
+            >
               <span>{error}</span>
-
               <button
                 type="button"
                 onClick={() => setError("")}
-                style={{
-                  border: 0,
-                  background: "transparent",
-                  color: "#b91c1c",
-                  cursor: "pointer",
-                }}
-                aria-label="Dismiss error"
+                style={{ border: 0, background: "none", color: "#b91c1c" }}
               >
                 <X size={15} />
               </button>
             </div>
           )}
 
-          {/* COMPOSER */}
-
+          {/* 3. KHUNG NHẬP LIỆU DẠNG FLOATING CARD 2 TẦNG NHƯ GOOGLE AI */}
           <footer
-            className="zchat-composer"
-            style={styles.composer}
+            style={{
+              padding: "6px 12px max(10px, env(safe-area-inset-bottom))",
+              background: COLORS.background,
+              flexShrink: 0,
+            }}
           >
             <input
               type="file"
               ref={fileRef}
               onChange={handleFileChange}
-              style={styles.hiddenInput}
+              style={{ display: "none" }}
             />
 
-            <div style={styles.composerActions}>
-              <button
-                type="button"
-                className="zchat-tool-btn"
-                style={styles.toolButton}
-                onClick={() => pickFile("image/*")}
-                disabled={!isConnected || isUploading}
-                aria-label="Send image"
-              >
-                {isUploading ? (
-                  <Loader2
-                    size={21}
-                    className="zchat-loading"
-                  />
-                ) : (
-                  <ImageIcon size={22} />
-                )}
-              </button>
-
-              <button
-                type="button"
-                className="zchat-tool-btn"
-                style={styles.toolButton}
-                onClick={() => pickFile("*/*")}
-                disabled={!isConnected || isUploading}
-                aria-label="Attach file"
-              >
-                <Paperclip size={22} />
-              </button>
-            </div>
-
-            <div style={styles.inputWrapper}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                background: "#ffffff",
+                borderRadius: 26,
+                padding: "10px 12px 8px 16px",
+                boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              {/* Tầng 1: Ô nhập văn bản */}
               <textarea
                 ref={inputRef}
                 rows={1}
                 value={text}
-                onChange={(event) => setText(event.target.value)}
+                onChange={(e) => setText(e.target.value)}
                 onKeyDown={handleKeyDown}
                 disabled={!isConnected || isUploading}
                 placeholder={
-                  isUploading
-                    ? "Uploading file..."
-                    : "Type a message..."
+                  isUploading ? "Đang tải tệp lên..." : "Nhập tin nhắn..."
                 }
-                style={styles.textarea}
+                style={{
+                  width: "100%",
+                  minHeight: 26,
+                  maxHeight: 110,
+                  border: 0,
+                  outline: "none",
+                  resize: "none",
+                  background: "transparent",
+                  fontSize: 15.5,
+                  lineHeight: "22px",
+                  color: "#1f1f1f",
+                  fontFamily: "inherit",
+                  padding: "2px 0 6px",
+                }}
               />
 
-              <button
-                type="button"
-                className="zchat-emoji-btn"
-                style={styles.emojiButton}
-                onClick={() => {
-                  setText((prev) => prev + "😊");
-                  inputRef.current?.focus();
+              {/* Tầng 2: Hàng nút công cụ bên dưới giống Google */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginTop: 2,
                 }}
-                aria-label="Emoji"
               >
-                <Smile size={22} />
-              </button>
-            </div>
+                {/* Cụm nút bên trái: + (Tệp), Ảnh, Emoji */}
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <button
+                    type="button"
+                    className="zchat-btn"
+                    onClick={() => pickFile("*/*")}
+                    disabled={!isConnected || isUploading}
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      border: 0,
+                      background: "#f1f5f9",
+                      color: "#334155",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                    }}
+                    aria-label="Đính kèm tệp"
+                  >
+                    {isUploading ? (
+                      <Loader2 size={18} className="zchat-loading" />
+                    ) : (
+                      <Plus size={20} />
+                    )}
+                  </button>
 
-            {text.trim() ? (
-              <button
-                type="button"
-                className="zchat-send-btn"
-                style={{
-                  ...styles.sendButton,
-                  opacity: !isConnected || isUploading ? 0.4 : 1,
-                }}
-                onClick={handleSend}
-                disabled={!isConnected || isUploading}
-                aria-label="Send message"
-              >
-                <Send size={19} />
-              </button>
-            ) : (
-              <button
-                type="button"
-                className="zchat-like-btn"
-                style={{
-                  ...styles.likeButton,
-                  opacity: !isConnected || isUploading ? 0.4 : 1,
-                }}
-                onClick={() => {
-                  if (isConnected && !isUploading) {
-                    sendMessage("👍");
-                  }
-                }}
-                disabled={!isConnected || isUploading}
-                aria-label="Like"
-              >
-                <ThumbsUp size={23} />
-              </button>
-            )}
+                  <button
+                    type="button"
+                    className="zchat-btn"
+                    onClick={() => pickFile("image/*")}
+                    disabled={!isConnected || isUploading}
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      border: 0,
+                      background: "transparent",
+                      color: "#475569",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                    }}
+                    aria-label="Gửi ảnh"
+                  >
+                    <ImageIcon size={20} />
+                  </button>
+
+                  <button
+                    type="button"
+                    className="zchat-btn"
+                    onClick={() => {
+                      setText((prev) => prev + "😊");
+                      inputRef.current?.focus();
+                    }}
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      border: 0,
+                      background: "transparent",
+                      color: "#475569",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                    }}
+                    aria-label="Biểu cảm"
+                  >
+                    <Smile size={20} />
+                  </button>
+                </div>
+
+                {/* Cụm nút bên phải: Nút Gửi mũi tên lên hoặc Like */}
+                {text.trim() ? (
+                  <button
+                    type="button"
+                    className="zchat-btn"
+                    onClick={handleSend}
+                    disabled={!isConnected || isUploading}
+                    style={{
+                      width: 44,
+                      height: 36,
+                      borderRadius: 999,
+                      border: 0,
+                      background: "#c2e7ff",
+                      color: "#001d35",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                    }}
+                    aria-label="Gửi"
+                  >
+                    <ArrowUp size={20} strokeWidth={2.4} />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="zchat-btn"
+                    onClick={() => {
+                      if (isConnected && !isUploading) sendMessage("👍");
+                    }}
+                    disabled={!isConnected || isUploading}
+                    style={{
+                      width: 44,
+                      height: 36,
+                      borderRadius: 999,
+                      border: 0,
+                      background: "#f1f5f9",
+                      color: COLORS.primary,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                    }}
+                    aria-label="Like"
+                  >
+                    <ThumbsUp size={18} />
+                  </button>
+                )}
+              </div>
+            </div>
           </footer>
         </section>
       </div>
